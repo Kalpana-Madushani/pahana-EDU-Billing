@@ -1,0 +1,62 @@
+/* footer-styles.css */
+/* Footer outside container - positioned at bottom of viewport */
+.footer-outside {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+    backdrop-filter: blur(10px);
+    color: white;
+    text-align: center;
+    padding: 8px 20px;
+    font-size: 11px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.footer-outside p {
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.footer-outside:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Alternative footer styles for different pages */
+.footer-dark {
+    background: rgba(47, 27, 20, 0.9);
+    border-top: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+.footer-transparent {
+    background: rgba(255, 255, 255, 0.1);
+    color: #333;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+    .footer-outside {
+        padding: 12px 15px;
+        font-size: 12px;
+    }
+    
+    .footer-outside p {
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-outside {
+        padding: 10px;
+        font-size: 11px;
+    }
+    
+    .footer-outside p {
+        word-break: break-word;
+    }
+}

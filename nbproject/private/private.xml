@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/gitignore.txt</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/controller/UserServlet.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/controller/logServlet.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/dashboard.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/adminDashboard.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/home.html</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/index.html</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/login.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/register.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/sidebar.html</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/header.html</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/admin/dashboardTab.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/nbproject/private/private.properties</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/nbproject/private/private.xml</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/nbproject/ant-deploy.xml</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/nbproject/project.properties</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/nbproject/project.xml</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/controller/BookServlet.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/admin/usersTab.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/web/view/stockKeeper/StockDashboard.jsp</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/model/Book.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/model/DBConnection.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/Dao/BookDAO.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/src/java/model/User.java</file>
+            <file>file:/C:/Users/amanm_679qu5f/OneDrive/Desktop/online-billing-system/build.xml</file>
+        </group>
+    </open-files>
+</project-private>
