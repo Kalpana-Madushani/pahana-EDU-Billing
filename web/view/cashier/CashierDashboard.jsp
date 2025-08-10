@@ -61,8 +61,8 @@
         font-weight: 600;
         font-size: 1rem;
         color: #374151;
-        padding: 12px 16px;
-        margin-bottom: 12px;
+        padding: 20px 16px;
+        margin-bottom: 20px;
         border-radius: 6px;
         text-decoration: none;
         display: block;
@@ -81,7 +81,7 @@
         font-weight: 700;
         text-align: left;
         border-radius: 6px;
-        padding: 12px 16px;
+        padding: 20px 16px;
         transition: background-color 0.15s ease;
     }
     .sidebar nav a.logout:hover {
@@ -138,7 +138,7 @@
         width: 100%;
         padding: 10px 14px;
         margin-bottom: 20px;
-        border: 1px solid #E8D5F2;;
+        border: 1px solid #E8D5F2;
         border-radius: 8px;
         font-size: 15px;
         color: #374151;
@@ -228,6 +228,11 @@
         font-weight: 600;
         border-radius: 6px;
         user-select: none;
+        display: none;
+    }
+    
+    .error.show {
+        display: block;
     }
 
     /* Responsive */
@@ -292,20 +297,17 @@
 <main class="main">
     <h2 class="page-title">Cashier Dashboard</h2>
 
-    <% if (error != null) { %>
-        <div class="error"><%= error %></div>
-    <% } %>
-
     <!-- Add Customer Section -->
     <section id="addCustomerSection" class="card active-section">
         <h3>1. Add Customer</h3>
+        <div class="error"></div>
         <form action="${pageContext.request.contextPath}/cashier" method="post" novalidate>
             <input type="hidden" name="action" value="addCustomer"/>
             <label for="name">Name *</label>
-            <input id="name" name="name" type="text" required placeholder="Customer Full Name" />
+            <input id="name" name="name" type="text" pattern="[A-Za-z\s\-']{2,50}" required placeholder="Customer Full Name" />
 
             <label for="phone">Phone</label>
-            <input id="phone" name="phone" type="text" placeholder="e.g. +94 77 123 4567" />
+            <input id="phone" name="phone" type="text" pattern="0[0-9]{9}" placeholder="e.g. +94 77 123 4567" />
 
             <label for="email">Email</label>
             <input id="email" name="email" type="email" placeholder="example@email.com" />
@@ -319,9 +321,23 @@
 
     <!-- Customer List Section -->
     <section id="customerListSection" class="card" style="display:none;">
+         <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
         <h3>2. Customer List</h3>
+        <div style="position: relative; min-width: 400px;">
+            <input 
+                type="text" 
+                id="customerSearch" 
+                placeholder="Search customers by name or phone..." 
+                oninput="filterCustomers()"
+                style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 16px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                onfocus="this.style.borderColor='#E8D5F2';"
+                onblur="this.style.borderColor='#E8D5F2';"
+            />
+        </div>
+    </div>
+        
         <% if (customers != null && !customers.isEmpty()) { %>
-            <table>
+            <table id="customersTable">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -333,7 +349,8 @@
                 </thead>
                 <tbody>
                 <% for (Customer c : customers) { %>
-                    <tr>
+                    <tr data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : "" %>" 
+                        data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : "" %>">
                         <td><%= c.getId() %></td>
                         <td><%= c.getName() %></td>
                         <td><%= c.getPhone() %></td>
@@ -459,6 +476,68 @@
                 targetSection.style.display = 'block';
             }
         });
+    });
+  
+    function filterCustomers() {
+        const query = document.getElementById('customerSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#customersTable tbody tr');
+            rows.forEach(row => {
+        const name = row.dataset.name || '';
+        const phone = row.dataset.phone || '';
+    
+        const visible = name.includes(query) || phone.includes(query);
+            row.style.display = visible ? '' : 'none';
+        });
+    }
+    
+    // Add Customer form validation
+    const customerForm = document.querySelector('#addCustomerSection form');
+    const nameInput = document.querySelector('#name');
+    const phoneInput = document.querySelector('#phone');
+    const emailInput = document.querySelector('#email');
+    const addressInput = document.querySelector('#address');
+    const errorDiv = document.querySelector('#addCustomerSection .error'); 
+
+    customerForm.addEventListener('submit', (e) => {
+        errorDiv.classList.remove('show'); 
+        errorDiv.textContent = ''; 
+
+        // Name validation: 2-50 characters, letters, spaces, hyphens, apostrophes
+        const namePattern = /^[A-Za-z\s\-']{2,50}$/;
+        if (!namePattern.test(nameInput.value)) {
+            e.preventDefault();
+            errorDiv.textContent = 'Name must be 2-50 characters, using letters, spaces, hyphens, or apostrophes.';
+            errorDiv.classList.add('show'); 
+            nameInput.focus();
+            return;
+        }
+
+        // Phone validation: Optional, but if provided, must be 10 digits starting with 0
+        if (phoneInput.value && !/^0[0-9]{9}$/.test(phoneInput.value)) {
+            e.preventDefault();
+            errorDiv.textContent = 'Phone must be 10 digits starting with 0 (e.g., 0761234567).';
+            errorDiv.classList.add('show'); 
+            phoneInput.focus();
+            return;
+        }
+
+        // Email validation: Optional, but if provided, must be valid
+        if (emailInput.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+            e.preventDefault();
+            errorDiv.textContent = 'Please enter a valid email address.';
+            errorDiv.classList.add('show'); 
+            emailInput.focus();
+            return;
+        }
+
+        // Address validation: Optional, but if provided, 5-100 characters
+        if (addressInput.value && !/^.{5,100}$/.test(addressInput.value)) {
+            e.preventDefault();
+            errorDiv.textContent = 'Address must be 5-100 characters if provided.';
+            errorDiv.classList.add('show'); 
+            addressInput.focus();
+            return;
+        }
     });
 </script>
 

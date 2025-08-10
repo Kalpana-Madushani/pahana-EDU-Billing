@@ -75,10 +75,6 @@
     ">Admin Panel</h1>
     
   </div>
-
-  
-  
-  
   
   <!-- Navigation Links -->
   <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column;">
@@ -545,7 +541,7 @@
     <input 
       type="text" 
       id="customerSearch" 
-      placeholder="Search customers..." 
+      placeholder="Search customers by name or phone..." 
       oninput="filterCustomers()" 
       style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1.8px solid #ccc; font-size: 16px; transition: border-color 0.3s ease;"
       onfocus="this.style.borderColor='#2563eb'"
@@ -1058,9 +1054,7 @@ document.getElementById('customerForm').addEventListener('submit', function(e) {
     rows.forEach(row => {
       const name = row.dataset.name || '';
       const phone = row.dataset.phone || '';
-      const email = row.dataset.email || '';
-      const address = row.dataset.address || '';
-      const visible = name.includes(query) || phone.includes(query) || email.includes(query) || address.includes(query);
+      const visible = name.includes(query) || phone.includes(query);
       row.style.display = visible ? '' : 'none';
     });
   }
