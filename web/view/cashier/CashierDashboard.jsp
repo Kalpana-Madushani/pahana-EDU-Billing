@@ -41,6 +41,14 @@
         flex-direction: column;
         padding: 24px 20px;
     }
+    .sidebar .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #B595D8;
+    }
     .sidebar h2 {
         font-weight: 700;
         font-size: 1.75rem;
@@ -61,17 +69,17 @@
         transition: background-color 0.15s ease, color 0.15s ease;
         cursor: pointer;
     }
-    .sidebar nav a:hover,
+    .sidebar nav a:not(.logout):hover,
     .sidebar nav a.active {
-        background-color: #e0e7ff;
-        color: #3730a3;
+        background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+        color: #374151;
     }
     .sidebar nav a.logout {
         margin-top: auto;
         background-color: #ef4444;
         color: #ffffff;
         font-weight: 700;
-        text-align: center;
+        text-align: left;
         border-radius: 6px;
         padding: 12px 16px;
         transition: background-color 0.15s ease;
@@ -94,7 +102,7 @@
         font-weight: 800;
         font-size: 2.25rem;
         margin-bottom: 32px;
-        border-left: 4px solid #6366f1; /* subtle blue */
+        border-left: 4px solid #E8D5F2; 
         padding-left: 16px;
         color: #1f2937;
     }
@@ -130,8 +138,8 @@
         width: 100%;
         padding: 10px 14px;
         margin-bottom: 20px;
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
+        border: 1px solid #E8D5F2;;
+        border-radius: 8px;
         font-size: 15px;
         color: #374151;
         background-color: #ffffff;
@@ -141,13 +149,13 @@
     form input[type="email"]:focus,
     form input[type="number"]:focus,
     form select:focus {
-        border-color: #6366f1;
+        border-color: #B595D8;
         outline: none;
         background-color: #eff6ff;
     }
 
     form button {
-        background-color: #6366f1;
+        background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
         border: none;
         color: #ffffff;
         padding: 12px 28px;
@@ -270,13 +278,13 @@
 
 <!-- Sidebar -->
 <aside class="sidebar">
-    <h2>🛒 Cashier Panel</h2>
+    <h2 class="logo">🏠 Pahana Bookshop</h2>
     <nav>
-        <a href="#" class="active" data-target="addCustomerSection">Add Customer</a>
-        <a href="#" data-target="customerListSection">View Customers</a>
-        <a href="#" data-target="generateBillSection">Generate Bill</a> 
-         <a href="#" data-target="pastBillsSection">Bill History</a>
-        <a href="#" class="logout">Logout</a>
+        <a href="#" class="active" data-target="addCustomerSection">➕ Add Customer</a>
+        <a href="#" data-target="customerListSection">👥 View Customers</a>
+        <a href="#" data-target="generateBillSection">📜 Generate Bill</a> 
+         <a href="#" data-target="pastBillsSection">📋 Bill History</a>
+        <a href="#" class="logout">🔓 Logout</a>
     </nav>
 </aside>
 
@@ -349,7 +357,7 @@
             <!-- Select Customer Dropdown -->
             <label for="customerSelect">Select Customer *</label>
             <select id="customerSelect" name="customerId" required>
-                <option value="" disabled selected>-- Select a Customer --</option>
+                <option value="" disabled selected>Select a Customer</option>
                 <% if (customers != null && !customers.isEmpty()) {
                     for (Customer c : customers) { %>
                         <option value="<%= c.getId() %>"><%= c.getName() %> - <%= c.getPhone() %></option>
