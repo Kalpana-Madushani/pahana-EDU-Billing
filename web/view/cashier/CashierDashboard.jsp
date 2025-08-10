@@ -321,7 +321,7 @@
 
     <!-- Customer List Section -->
     <section id="customerListSection" class="card" style="display:none;">
-         <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
         <h3>2. Customer List</h3>
         <div style="position: relative; min-width: 400px;">
             <input 
@@ -368,21 +368,74 @@
     <!-- Generate Bill Section -->
     <section id="generateBillSection" class="card" style="display:none;">
         <h3>3. Select Customer & Books to Generate Bill</h3>
-        <form action="${pageContext.request.contextPath}/cashier" method="post" novalidate>
+        <div class="error"></div>
+        <form action="${pageContext.request.contextPath}/cashier" method="post">
             <input type="hidden" name="action" value="createBill"/>
 
-            <!-- Select Customer Dropdown -->
+            <!-- Select Customer Drop-down -->
             <label for="customerSelect">Select Customer *</label>
-            <select id="customerSelect" name="customerId" required>
-                <option value="" disabled selected>Select a Customer</option>
-                <% if (customers != null && !customers.isEmpty()) {
-                    for (Customer c : customers) { %>
-                        <option value="<%= c.getId() %>"><%= c.getName() %> - <%= c.getPhone() %></option>
-                <%  }
-                } else { %>
-                    <option disabled>No customers available</option>
-                <% } %>
-            </select>
+            <div style="position: relative; width: 100%; margin-bottom: 20px;">
+                <!-- Hidden input to store the actual customer ID -->
+                <input type="hidden" id="selectedCustomerId" name="customerId" required />
+
+                <!-- Searchable input field -->
+                <input 
+                    type="text" 
+                    id="customerSearchInput" 
+                    placeholder="Type to search customer name or phone..." 
+                    autocomplete="off"
+                    style="width: 100%; padding: 10px 40px 10px 14px; border: 1px solid #E8D5F2; border-radius: 8px; font-size: 15px; color: #374151; background-color: #ffffff; transition: border-color 0.2s ease;"
+                    onfocus="showDropdown()" 
+                    oninput="filterCustomerOptions()" 
+                    onblur="hideDropdownDelayed()"
+                />
+                
+                <!-- Black Drop-down Arrow -->
+                <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #000000;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </div>
+
+                <!-- Drop-down list -->
+                 <div id="customerDropdownList" style="
+                    position: absolute; 
+                    top: 100%; 
+                    left: 0; 
+                    right: 0; 
+                    background: white; 
+                    border: 1px solid #E8D5F2; 
+                    border-radius: 8px; 
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+                    max-height: 200px; 
+                    overflow-y: auto; 
+                    z-index: 1000; 
+                    display: none;
+                ">
+                    <% if (customers != null && !customers.isEmpty()) {
+                        for (Customer c : customers) { %>
+                        <div class="customer-option" 
+                             data-id="<%= c.getId() %>" 
+                             data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : "" %>" 
+                             data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : "" %>"
+                             onclick="selectCustomer(<%= c.getId() %>, '<%= c.getName() != null ? c.getName().replace("'", "\\'") : "" %>', '<%= c.getPhone() != null ? c.getPhone().replace("'", "\\'") : "" %>')"
+                             style="
+                                padding: 12px 14px; 
+                                cursor: pointer; 
+                                border-bottom: 1px solid #f3f4f6; 
+                                transition: background-color 0.2s ease;
+                             "
+                             onmouseover="this.style.backgroundColor='#f3f4f6'" 
+                             onmouseout="this.style.backgroundColor='white'">
+                            <span style="font-weight: 600; color: #374151;"><%= c.getName() %></span>
+                            <span style="color: #6b7280; margin-left: 8px;">- <%= c.getPhone() %></span>
+                        </div>
+                    <%  }
+                    } else { %>
+                        <div style="padding: 12px 14px; color: #6b7280; font-style: italic;">No customers available</div>
+                    <% } %>
+                </div>
+            </div>
 
             <!-- Books Table -->
             <table>
@@ -424,9 +477,22 @@
                 
      <!-- Past Bills Section -->
     <section id="pastBillsSection" class="card" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
         <h3>4. Past Bills</h3>
+        <div style="position: relative; min-width: 400px;">
+            <input 
+                type="text" 
+                id="billSearch" 
+                placeholder="Search bill by customer name or date..." 
+                oninput="filterBills()"
+                style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 16px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                onfocus="this.style.borderColor='#E8D5F2';"
+                onblur="this.style.borderColor='#E8D5F2';"
+            />
+        </div>
+    </div>
         <% if (bills != null && !bills.isEmpty()) { %>
-            <table>
+            <table id="billsTable">
                 <thead>
                     <tr>
                         <th>Bill ID</th>
@@ -444,7 +510,34 @@
                 <td><%= sdf.format(bill.date) %></td>
                 <td><%= String.format("%.2f", bill.total) %></td>
                 <td>
-                    <a href="<%= request.getContextPath() %>/view/cashier/printBill.jsp?billId=<%= bill.billId %>" target="_blank">View</a>
+                    <a href="<%= request.getContextPath() %>/view/cashier/printBill.jsp?billId=<%= bill.billId %>" 
+                           target="_blank" 
+                           class="view-btn"
+                           style="
+                               display: inline-flex;
+                               align-items: center;
+                               gap: 6px;
+                               padding: 8px 16px;
+                               background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                               color: #ffffff;
+                               text-decoration: none;
+                               border-radius: 8px;
+                               font-size: 13px;
+                               font-weight: 600;
+                               transition: all 0.3s ease;
+                               box-shadow: 0 2px 4px rgba(181, 149, 216, 0.3);
+                               border: none;
+                               cursor: pointer;
+                           "
+                           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(181, 149, 216, 0.4)'; this.style.background='linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7)';"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(181, 149, 216, 0.3)'; this.style.background='linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8)';">
+                            <!-- Eye icon SVG -->
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            View
+                        </a>
                 </td>
             </tr>
 
@@ -488,6 +581,25 @@
         const visible = name.includes(query) || phone.includes(query);
             row.style.display = visible ? '' : 'none';
         });
+    }
+    
+    function filterBills() {
+        const query = document.getElementById('billSearch').value.trim().toLowerCase();
+        const table = document.getElementById('billsTable');
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const customerName = row.getElementsByTagName('td')[1].textContent.toLowerCase();
+            const dateTime = row.getElementsByTagName('td')[2].textContent; 
+            const dateOnly = dateTime.split(' ')[0]; // Get only the date part (e.g., "2025-08-10")
+
+            if (query === '' || customerName.includes(query) || dateOnly.includes(query)) {
+                row.style.display = ''; 
+            } else {
+                row.style.display = 'none';
+            }
+        }
     }
     
     // Add Customer form validation
@@ -539,6 +651,117 @@
             return;
         }
     });
+    
+    // Customer dropdown search functionality
+    let hideTimeout;
+
+    function showDropdown() {
+        clearTimeout(hideTimeout);
+        document.getElementById('customerDropdownList').style.display = 'block';
+    }
+
+    function hideDropdownDelayed() {
+        hideTimeout = setTimeout(() => {
+            document.getElementById('customerDropdownList').style.display = 'none';
+        }, 200);
+    }
+
+    function filterCustomerOptions() {
+        const input = document.getElementById('customerSearchInput');
+        const dropdown = document.getElementById('customerDropdownList');
+        const query = input.value.toLowerCase();
+        const options = dropdown.querySelectorAll('.customer-option');
+
+        let hasVisible = false;
+
+        options.forEach(option => {
+            const name = option.dataset.name.toLowerCase();
+            const phone = option.dataset.phone.toLowerCase();
+            const isVisible = name.includes(query) || phone.includes(query);
+
+            option.style.display = isVisible ? 'block' : 'none';
+            if (isVisible) hasVisible = true;
+        });
+
+        // Clear selection if input doesn't match any customer exactly
+        const exactMatch = Array.from(options).find(option => 
+            option.dataset.name.toLowerCase() === query || 
+            option.dataset.phone.toLowerCase() === query
+        );
+
+        if (!exactMatch) {
+            document.getElementById('selectedCustomerId').value = '';
+        }
+    }
+
+    function selectCustomer(id, name, phone) {
+        document.getElementById('selectedCustomerId').value = id;
+        document.getElementById('customerSearchInput').value = name + ' - ' + phone;
+        document.getElementById('customerDropdownList').style.display = 'none';
+    }
+
+    // Clear customer selection when input is cleared
+    document.getElementById('customerSearchInput').addEventListener('input', function() {
+        if (this.value === '') {
+            document.getElementById('selectedCustomerId').value = '';
+        }
+    });
+    
+    // Generate Bill form validation
+    const billForm = document.querySelector('#generateBillSection form');
+    const billErrorDiv = document.querySelector('#generateBillSection .error');
+    billForm.addEventListener('submit', (e) => {
+        billErrorDiv.classList.remove('show');
+        billErrorDiv.textContent = '';
+
+        // Check if a customer is selected
+        const customerId = document.getElementById('selectedCustomerId').value;
+        if (!customerId) {
+            e.preventDefault();
+            billErrorDiv.textContent = 'Please select a customer before generating the bill.';
+            billErrorDiv.classList.add('show');
+            document.getElementById('customerSearchInput').focus();
+            return;
+        }
+
+        // Check if at least one book is selected
+        const selectedBooks = document.querySelectorAll('input[name="selected"]:checked');
+        if (selectedBooks.length === 0) {
+            e.preventDefault();
+            billErrorDiv.textContent = 'Please select at least one book before generating the bill.';
+            billErrorDiv.classList.add('show');
+            return;
+        }
+
+        // Validate quantities for selected books
+        for (let checkbox of selectedBooks) {
+            const bookId = checkbox.value;
+            const quantityInput = document.querySelector(`input[name="quantity_${bookId}"]`);
+            const quantity = parseInt(quantityInput.value);
+            const maxQuantity = parseInt(quantityInput.max);
+            if (isNaN(quantity) || quantity < 1 || quantity > maxQuantity) {
+                e.preventDefault();
+                billErrorDiv.textContent = `Invalid quantity for book ID ${bookId}. Must be between 1 and ${maxQuantity}.`;
+                billErrorDiv.classList.add('show');
+                quantityInput.focus();
+                return;
+            }
+        }
+    });
+
+    // Disable submit button if no customers or books are available
+    document.addEventListener('DOMContentLoaded', () => {
+        const customerOptions = document.querySelectorAll('#customerDropdownList .customer-option');
+        const bookRows = document.querySelectorAll('#generateBillSection table tbody tr input[name="selected"]');
+        const submitButton = document.querySelector('#generateBillSection button[type="submit"]');
+        
+        if (customerOptions.length === 0 || bookRows.length === 0) {
+            submitButton.disabled = true;
+            submitButton.style.opacity = '0.5';
+            submitButton.style.cursor = 'not-allowed';
+        }
+    });
+    
 </script>
 
 </body>
