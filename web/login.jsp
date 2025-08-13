@@ -38,7 +38,7 @@
             </div>
             
             <div class="button-group">
-                <a href="register.jsp" class="btn btn-secondary">Register</a>
+<!--                <a href="register.jsp" class="btn btn-secondary">Register</a>-->
                 <input type="submit" value="Login" class="btn btn-primary">
             </div>
         </form>
