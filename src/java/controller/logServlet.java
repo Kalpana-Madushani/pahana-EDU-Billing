@@ -49,7 +49,7 @@ public class logServlet extends HttpServlet {
                     case "admin":
                         response.sendRedirect(request.getContextPath() + "/admin");
                         break;
-                    case "stock keeper":
+                    case "stock_keeper":
                         response.sendRedirect(request.getContextPath() + "/books");
                         break;
                     case "cashier":

@@ -11,7 +11,7 @@ public class UserDAO {
 
     public static List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users ORDER BY createdDate DESC";
+        String sql = "SELECT * FROM users ORDER BY created_date DESC";
         try (Connection conn = DBConnection.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -23,7 +23,7 @@ public class UserDAO {
                 u.setPassword(rs.getString("password"));  // Usually hashed
                 u.setRole(rs.getString("role"));
                 u.setStatus(rs.getString("status"));
-                u.setCreatedDate(rs.getString("createdDate"));
+                u.setCreatedDate(rs.getString("created_date"));
                 list.add(u);
             }
         } catch (Exception e) {
@@ -31,10 +31,28 @@ public class UserDAO {
         }
         return list;
     }
+    
+     // Check if a username is already taken
+    public static boolean isUsernameTaken(String username) throws SQLException {
+        String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+        try (Connection conn = DBConnection.getInstance();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // Insert new user
     public static boolean insertUser(User user) {
-        String sql = "INSERT INTO users (id, username, password, role, status, createdDate) VALUES (?, ?, ?, ?, ?, ?)";
+        System.out.println("user added");
+        String sql = "INSERT INTO users (id, username, password, role, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getId());
@@ -42,7 +60,6 @@ public class UserDAO {
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole());
             ps.setString(5, user.getStatus());
-            ps.setString(6, user.getCreatedDate());
             int rows = ps.executeUpdate();
             return rows > 0;
         } catch (Exception e) {
@@ -53,6 +70,7 @@ public class UserDAO {
 
     // Update user (password update optional)
     public static boolean updateUser(User user) {
+        System.out.println(user.getId());
         String sql = "UPDATE users SET username=?, password=?, role=?, status=? WHERE id=?";
         try (Connection conn = DBConnection.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {

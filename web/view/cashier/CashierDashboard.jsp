@@ -121,6 +121,42 @@
                 margin-bottom: 24px;
                 color: #374151;
             }
+            
+             /* Action buttons */
+            .action-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                margin-right: 8px;
+            }
+            .action-btn.edit {
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                color: #ffffff;
+                box-shadow: 0 2px 4px rgba(181, 149, 216, 0.3);
+            }
+            .action-btn.edit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(181, 149, 216, 0.4);
+                background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
+            }
+            .action-btn.delete {
+                background: #ef4444;
+                color: #ffffff;
+                box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+            }
+            .action-btn.delete:hover {
+                background: #dc2626;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            }
 
             /* Form styling */
             form label {
@@ -345,6 +381,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -356,6 +393,21 @@
                             <td><%= c.getPhone()%></td>
                             <td><%= c.getEmail()%></td>
                             <td><%= c.getAddress()%></td>
+                            <td>
+                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button class="action-btn delete" onclick="confirmDelete('customer', <%= c.getId()%>)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M3 6h18"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                         <% } %>
                     </tbody>

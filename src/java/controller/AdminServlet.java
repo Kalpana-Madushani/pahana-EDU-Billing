@@ -11,16 +11,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 /**
- * AdminServlet - single servlet to serve the admin dashboard and handle CRUD actions
- * URL: /admin
+ * AdminServlet - single servlet to serve the admin dashboard and handle CRUD
+ * actions URL: /admin
  *
- * Note: This servlet assumes the following DAO methods exist:
- *  - CustomerDAO: insertCustomer(Customer) -> int (generated id), updateCustomer(Customer), deleteCustomer(int), getAllCustomers()
- *  - UserDAO: insertUser(User), updateUser(User), deleteUser(String id or int), getAllUsers()
- *  - BookDAO: insertBook(Book), updateBook(Book), deleteBook(int), getAllBooks()
+ * Note: This servlet assumes the following DAO methods exist: - CustomerDAO:
+ * insertCustomer(Customer) -> int (generated id), updateCustomer(Customer),
+ * deleteCustomer(int), getAllCustomers() - UserDAO: insertUser(User),
+ * updateUser(User), deleteUser(String id or int), getAllUsers() - BookDAO:
+ * insertBook(Book), updateBook(Book), deleteBook(int), getAllBooks()
  *
  * If any method doesn't exist, add it in the corresponding DAO.
  */
@@ -73,8 +76,11 @@ public class AdminServlet extends HttpServlet {
 
                     Customer c = new Customer(0, name, phone, email, address); // constructor: id,name,phone,email,address
                     int newId = CustomerDAO.insertCustomer(c); // must return generated id
-                    if (newId > 0) redirectMsg = "Customer added";
-                    else redirectMsg = "Failed to add customer";
+                    if (newId > 0) {
+                        redirectMsg = "Customer added";
+                    } else {
+                        redirectMsg = "Failed to add customer";
+                    }
                     break;
                 }
                 case "editCustomer": {
@@ -98,45 +104,41 @@ public class AdminServlet extends HttpServlet {
 
                 // ----------------- USER -----------------
                 case "addUser": {
+                    System.out.println("add user");
+                    String id = req.getParameter("id");
                     String username = req.getParameter("username");
                     String password = req.getParameter("password");
                     String role = req.getParameter("role");
                     String status = req.getParameter("status");
 
                     User u = new User();
-                    u.setId(null); // or leave null — your DAO should auto-generate id
                     u.setUsername(username);
-                    u.setPassword(password); // consider hashing in DAO before storing
+                    u.setPassword(password);
                     u.setRole(role);
-                    u.setStatus(status);
+                    u.setStatus(status.toUpperCase());
+                    
+                     try {
+                        if (id.isEmpty()) {
+                            u.setId(null);
+                            UserDAO.insertUser(u);
+                        } else {
+                            u.setId(id);
+                            UserDAO.updateUser(u);
+                        }
+                        resp.sendRedirect(req.getContextPath() + "/admin?activeTab=usersSection");
+                    } catch (Exception e) {
+                        req.setAttribute("error", "Failed to add user: " + e.getMessage());
+                    }
 
-                    UserDAO.insertUser(u); // implement insertUser(User) in UserDAO
-                    redirectMsg = "User added";
-                    break;
+                    return;
                 }
-                case "editUser": {
-                    String id = req.getParameter("id"); // your User model id is String in provided model
-                    String username = req.getParameter("username");
-                    String password = req.getParameter("password"); // may be empty if not changing
-                    String role = req.getParameter("role");
-                    String status = req.getParameter("status");
 
-                    User u = new User();
-                    u.setId(id);
-                    u.setUsername(username);
-                    if (password != null && !password.trim().isEmpty()) u.setPassword(password);
-                    u.setRole(role);
-                    u.setStatus(status);
-
-                    UserDAO.updateUser(u); // implement updateUser(User) in UserDAO
-                    redirectMsg = "User updated";
-                    break;
-                }
                 case "deleteUser": {
                     String id = req.getParameter("id");
+                    System.out.println(id);
                     UserDAO.deleteUser(id); // implement deleteUser(String id) in UserDAO
-                    redirectMsg = "User deleted";
-                    break;
+                    resp.sendRedirect(req.getContextPath() + "/admin?activeTab=usersSection");
+                    return;
                 }
 
                 // ----------------- BOOK -----------------

@@ -165,6 +165,7 @@
             form input[type="text"],
             form input[type="email"],
             form input[type="number"],
+            form input[type="password"],
             form select,
             form textarea {
                 width: 100%;
@@ -180,6 +181,7 @@
             form input[type="text"]:focus,
             form input[type="email"]:focus,
             form input[type="number"]:focus,
+            form input[type="password"]:focus,
             form select:focus,
             form textarea:focus {
                 border-color: #B595D8;
@@ -272,7 +274,7 @@
 
             /* Add button */
             .add-btn {
-                background: linear-gradient(135deg, #10b981, #059669);
+                background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
                 color: #ffffff;
                 border: none;
                 border-radius: 8px;
@@ -284,12 +286,11 @@
                 align-items: center;
                 gap: 8px;
                 transition: all 0.3s ease;
-                box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
             }
             .add-btn:hover {
-                background: linear-gradient(135deg, #059669, #047857);
+                background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
                 transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+                /*box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);*/
             }
 
             /* Summary cards styling */
@@ -476,14 +477,6 @@
             }
             .error.show {
                 display: block;
-            }
-
-            /* Section header */
-            .section-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 24px;
             }
 
             /* Responsive */
@@ -685,7 +678,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
-                            <th>Actions</th>
+<!--                            <th>Actions</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -698,7 +691,7 @@
                             <td><%= c.getPhone()%></td>
                             <td><%= c.getEmail()%></td>
                             <td><%= c.getAddress()%></td>
-                            <td>
+<!--                            <td>
                                 <button class="action-btn edit" onclick="openEditCustomerModal(this)">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -712,7 +705,7 @@
                                     </svg>
                                     Delete
                                 </button>
-                            </td>
+                            </td>-->
                         </tr>
                         <% } %>
                     </tbody>
@@ -724,18 +717,32 @@
 
             <!-- Users Section -->
             <section id="usersSection" class="card" style="display:none;">
-                <div class="section-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
                     <h3>Manage Users</h3>
-                    <button class="add-btn" onclick="openModal('userModal')">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        Add User
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style = "min-width: 400px">
+                            <input 
+                                type="text" 
+                                id="userSearch" 
+                                placeholder="Search user by user name or role..." 
+                                oninput="filterUsers()"
+                                style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 16px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                                onfocus="this.style.borderColor = '#E8D5F2';"
+                                onblur="this.style.borderColor = '#E8D5F2';"
+                                />
+                        </div>
+
+                        <button class="add-btn" onclick="openModal('userModal')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add User
+                        </button>
+                    </div>
                 </div>
 
                 <% if (users != null && !users.isEmpty()) { %>
-                <table>
+                <table id="usersTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -748,17 +755,15 @@
                     </thead>
                     <tbody>
                         <% for (User u : users) {%>
-                        <tr data-user-id="<%= u.getId()%>"
-                            data-username="<%= u.getUsername()%>"
-                            data-role="<%= u.getRole()%>"
-                            data-status="<%= u.getStatus()%>">
+                        <tr data-username="<%= u.getUsername()%>"
+                            data-role="<%= u.getRole()%>">
                             <td><%= u.getId()%></td>
                             <td><%= u.getUsername()%></td>
                             <td><%= u.getRole()%></td>
                             <td><%= u.getStatus()%></td>
                             <td><%= u.getCreatedDate()%></td>
                             <td>
-                                <button class="action-btn edit" onclick="openEditUserModal(this)">
+                                <button class="action-btn edit" onclick="openEditUserModal(this, '<%= u.getPassword()%>')">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -783,18 +788,31 @@
 
             <!-- Books Section -->
             <section id="booksSection" class="card" style="display:none;">
-                <div class="section-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
                     <h3>Manage Books</h3>
-                    <button class="add-btn" onclick="openModal('bookModal')">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        Add Book
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style = "min-width: 400px">
+                            <input 
+                                type="text" 
+                                id="bookSearch" 
+                                placeholder="Search book by title, author or category..." 
+                                oninput="filterBooks()"
+                                style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 16px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                                onfocus="this.style.borderColor = '#E8D5F2';"
+                                onblur="this.style.borderColor = '#E8D5F2';"
+                                />
+                        </div>
+                        <button class="add-btn" onclick="openModal('bookModal')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Book
+                        </button>
+                    </div>
                 </div>
 
                 <% if (books != null && !books.isEmpty()) { %>
-                <table>
+                <table id="booksTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -810,11 +828,9 @@
                     </thead>
                     <tbody>
                         <% for (Book b : books) {%>
-                        <tr data-book-id="<%= b.getId()%>"
-                            data-title="<%= b.getTitle()%>"
+                        <tr data-title="<%= b.getTitle()%>"
                             data-author="<%= b.getAuthor()%>"
                             data-category="<%= b.getCategory()%>"
-                            data-stock="<%= b.getStock()%>"
                             data-publisher="<%= b.getPublisher()%>"
                             data-year="<%= b.getYear()%>"
                             data-price="<%= b.getPrice()%>">
@@ -880,10 +896,13 @@
                 <span class="close" onclick="closeModal('userModal')">&times;</span>
                 <h3 id="userModalTitle">Add User</h3>
                 <div class="error"></div>
-                <form id="userForm">
+                <form id="userForm" action="<%=request.getContextPath()%>/admin" method="post">
+                    <input type="hidden" name="action" value="addUser"/>
                     <input type="hidden" id="userId" name="id" />
                     <label for="userUsername">Username</label>
                     <input type="text" id="userUsername" name="username" required />
+                    <label for="userPassword">Password</label>
+                    <input type="password" id="userPassword" name="password" required />
                     <label for="userRole">Role</label>
                     <select id="userRole" name="role" required>
                         <option value="">Select Role</option>
@@ -928,27 +947,64 @@
             </div>
         </div>
 
+        <form id="deleteForm" method="post" style="display:none;">
+            <input type="hidden" name="action" id="deleteAction">
+            <input type="hidden" name="id" id="deleteId">
+        </form>
+
         <script>
-            // Sidebar navigation toggle logic
             const links = document.querySelectorAll('.sidebar nav a[data-target]');
             const sections = document.querySelectorAll('main section');
 
+            function showSection(targetId) {
+                let found = false;
+
+                // Remove active class and hide all sections
+                links.forEach(link => {
+                    if (link.getAttribute('data-target') === targetId) {
+                        link.classList.add('active');
+                        found = true;
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+
+                sections.forEach(section => {
+                    section.style.display = section.id === targetId ? 'block' : 'none';
+                });
+
+                // If targetId not found, fallback to first section
+                if (!found && links.length > 0) {
+                    const firstId = links[0].getAttribute('data-target');
+                    links[0].classList.add('active');
+                    sections.forEach(section => {
+                        section.style.display = section.id === firstId ? 'block' : 'none';
+                    });
+                }
+            }
+
+            // Click event for sidebar links
             links.forEach(link => {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-
-                    links.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-
-                    sections.forEach(section => section.style.display = 'none');
                     const targetId = this.getAttribute('data-target');
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        targetSection.style.display = 'block';
-                    }
+                    showSection(targetId);
+
+                    // Update URL query parameter without reloading
+                    const url = new URL(window.location);
+                    url.searchParams.set('activeTab', targetId);
+                    window.history.pushState({}, '', url);
                 });
             });
 
+            // Handle page load with URL query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('activeTab');
+            showSection(activeTab);
+        </script>
+
+
+        <script>
             // Search functionality
             function filterCustomers() {
                 const query = document.getElementById('customerSearch').value.toLowerCase();
@@ -961,10 +1017,35 @@
                 });
             }
 
+            function filterUsers() {
+                const query = document.getElementById('userSearch').value.toLowerCase();
+                const rows = document.querySelectorAll('#usersTable tbody tr');
+                rows.forEach(row => {
+                    const username = row.dataset.username || '';
+                    const role = row.dataset.role || '';
+                    const visible = username.includes(query) || role.includes(query);
+                    row.style.display = visible ? '' : 'none';
+                });
+            }
+
+            function filterBooks() {
+                const query = document.getElementById('bookSearch').value.toLowerCase();
+                const rows = document.querySelectorAll('#booksTable tbody tr');
+                rows.forEach(row => {
+                    const title = row.dataset.title || '';
+                    const author = row.dataset.author || '';
+                    const category = row.dataset.category || '';
+                    const publisher = row.dataset.publisher || '';
+                    const year = row.dataset.year || '';
+                    const price = row.dataset.price || '';
+                    const visible = title.includes(query) || author.includes(query) || category.includes(query) || publisher.includes(query) || year.includes(query) || price.includes(query);
+                    row.style.display = visible ? '' : 'none';
+                });
+            }
+
             // Modal functions
             function openModal(modalId) {
                 document.getElementById(modalId).style.display = 'block';
-
                 // Clear form and reset title for add operations
                 if (modalId === 'customerModal') {
                     document.getElementById('customerModalTitle').innerText = 'Add Customer';
@@ -997,14 +1078,16 @@
                 openModal('customerModal');
             }
 
-            function openEditUserModal(button) {
+            function openEditUserModal(button, password) {
                 const tr = button.closest('tr');
+                openModal('userModal');
                 document.getElementById('userModalTitle').innerText = 'Edit User';
                 document.getElementById('userId').value = tr.getAttribute('data-user-id');
                 document.getElementById('userUsername').value = tr.getAttribute('data-username');
-                document.getElementById('userRole').value = tr.getAttribute('data-role');
-                document.getElementById('userStatus').value = tr.getAttribute('data-status');
-                openModal('userModal');
+                document.getElementById('userPassword').value = password;
+                document.getElementById('userRole').value = tr.getAttribute('data-role').toLowerCase();
+                document.getElementById('userStatus').value = tr.getAttribute('data-status').toLowerCase();
+
             }
 
             function openEditBookModal(button) {
@@ -1025,7 +1108,17 @@
             function confirmDelete(type, id) {
                 if (confirm('Are you sure you want to delete this ' + type + '?')) {
                     // Here you would submit form or call server API to delete
-                    alert(type + ' with ID ' + id + ' will be deleted (implement server logic)');
+                    /// alert(type + ' with ID ' + id + ' will be deleted (implement server logic)');
+                    switch (type) {
+                        case 'user':
+                            const form = document.getElementById('deleteForm');
+                            document.getElementById('deleteAction').value = 'deleteUser';
+                            document.getElementById('deleteId').value = id;
+                            form.submit(); // submit the form to AdminServlet
+                        default:
+                            return;
+                    }
+
                 }
             }
 
@@ -1034,13 +1127,11 @@
                 e.preventDefault();
                 const errorDiv = this.querySelector('.error');
                 errorDiv.classList.remove('show');
-
                 const id = document.getElementById('customerId').value;
                 const name = document.getElementById('customerName').value.trim();
                 const phone = document.getElementById('customerPhone').value.trim();
                 const email = document.getElementById('customerEmail').value.trim();
                 const address = document.getElementById('customerAddress').value.trim();
-
                 // Basic validation
                 if (!name) {
                     errorDiv.textContent = 'Name is required.';
@@ -1056,7 +1147,6 @@
                         row.setAttribute('data-phone', phone);
                         row.setAttribute('data-email', email);
                         row.setAttribute('data-address', address);
-
                         row.cells[1].innerText = name;
                         row.cells[2].innerText = phone;
                         row.cells[3].innerText = email;
@@ -1073,7 +1163,6 @@
                         tr.setAttribute('data-phone', phone);
                         tr.setAttribute('data-email', email);
                         tr.setAttribute('data-address', address);
-
                         tr.innerHTML = `
                             <td>${newId}</td>
                             <td>${name}</td>
@@ -1102,36 +1191,12 @@
                 closeModal('customerModal');
                 this.reset();
             });
-
-            document.getElementById('userForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const errorDiv = this.querySelector('.error');
-                errorDiv.classList.remove('show');
-
-                // Add user form validation and submission logic here
-                alert('User form submitted (implement server logic)');
-                closeModal('userModal');
-                this.reset();
-            });
-
-            document.getElementById('bookForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const errorDiv = this.querySelector('.error');
-                errorDiv.classList.remove('show');
-
-                // Add book form validation and submission logic here
-                alert('Book form submitted (implement server logic)');
-                closeModal('bookModal');
-                this.reset();
-            });
-
             // Close modals when clicking outside
             window.addEventListener('click', function (e) {
                 if (e.target.classList.contains('modal')) {
                     e.target.style.display = 'none';
                 }
             });
-
             // Chart initialization
             window.addEventListener('load', () => {
                 const dataCounts = {
@@ -1140,9 +1205,7 @@
                     books: <%= books != null ? books.size() : 0%>,
                     activeUsers: <%= users != null ? users.stream().filter(u -> "active".equals(u.getStatus())).count() : 0%>
                 };
-
                 const ctx = document.getElementById('barChart').getContext('2d');
-
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1229,9 +1292,7 @@
                     books: <%= books != null ? books.size() : 0%>,
                     activeUsers: <%= users != null ? users.stream().filter(u -> "active".equals(u.getStatus())).count() : 0%>
                 };
-
                 const ctx = document.getElementById('barChart').getContext('2d');
-
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -1312,8 +1373,6 @@
                     }
                 });
             };
-
-
             function updateClock() {
                 const now = new Date();
                 const formattedTime = now.toLocaleTimeString();
@@ -1322,11 +1381,8 @@
 
             // Initial call
             updateClock();
-
             // Update every second
             setInterval(updateClock, 1000);
-
-
             // Filter customers in table by search input
             function filterCustomers() {
                 const query = document.getElementById('customerSearch').value.toLowerCase().trim();
@@ -1339,5 +1395,14 @@
                 });
             }
         </script>
+
+
+        <script>
+            window.addEventListener('load', () => {
+                console.log('Page loaded or reloaded. Current URL:', window.location.href);
+            });
+
+        </script>
+
     </body>
 </html>
