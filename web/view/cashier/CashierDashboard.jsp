@@ -41,7 +41,11 @@
                 display: flex;
                 flex-direction: column;
                 padding: 24px 20px;
+                min-width: 250px;
+                max-width: 250px;
+                flex-shrink: 0;
             }
+
             .sidebar .logo {
                 display: flex;
                 align-items: center;
@@ -50,6 +54,7 @@
                 font-weight: bold;
                 color: #B595D8;
             }
+
             .sidebar h2 {
                 font-weight: 700;
                 font-size: 1.75rem;
@@ -58,7 +63,8 @@
                 text-align: center;
                 letter-spacing: 1px;
             }
-            .sidebar nav a {
+
+            .sidebar a {
                 font-weight: 600;
                 font-size: 1rem;
                 color: #374151;
@@ -70,13 +76,14 @@
                 transition: background-color 0.15s ease, color 0.15s ease;
                 cursor: pointer;
             }
-            .sidebar nav a:not(.logout):hover,
-            .sidebar nav a.active {
+
+            .sidebar a:not(.logout):hover,
+            .sidebar a.active {
                 background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
                 color: #374151;
             }
-            .sidebar nav a.logout {
-                margin-top: auto;
+
+            .sidebar a.logout {
                 background-color: #ef4444;
                 color: #ffffff;
                 font-weight: 700;
@@ -85,8 +92,31 @@
                 padding: 20px 16px;
                 transition: background-color 0.15s ease;
             }
-            .sidebar nav a.logout:hover {
+            .sidebar a.logout:hover {
                 background-color: #b91c1c;
+            }
+
+            .sidebar .sidebar-footer {
+                margin-top: auto;
+                padding-top: 1.5rem;
+                border-top: 1px solid #e5e7eb;
+                font-size: 0.875rem;
+                color: #6b7280;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .sidebar .sidebar-footer .clock {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .sidebar .sidebar-footer .note {
+                background-color: #fee2e2;
+                padding: 0.75rem;
+                border-radius: 8px;
+                color: #dc2626;
+                font-weight: 500;
             }
 
             /* Main Content */
@@ -651,6 +681,205 @@
                 <p style="color:#6b7280; font-style: italic;">No past bills found.</p>
                 <% }%>
             </section>   
+
+            <!-- Help & Guide Section -->
+            <section id="helpSection" class="card" style="display:none;">
+                <h3>5. Help & Guide</h3>
+
+                <div style="max-width: 100%;">
+                    <!-- Quick Start Guide -->
+                    <div style="background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8); color: white; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                        <h4 style="margin: 0 0 12px 0; font-size: 1.4rem; font-weight: bold;">🚀 Quick Start Guide</h4>
+                        <p style="margin: 0; font-size: 1.1rem; line-height: 1.5;">
+                            Welcome to Pahana Bookshop Cashier Panel! Follow these simple steps to process your first sale:
+                            <strong>Add Customer → Select Books → Generate Bill</strong>
+                        </p>
+                    </div>
+
+                    <!-- Step-by-Step Instructions -->
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="color: #374151; font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid #E8D5F2; padding-bottom: 8px;">
+                            📋 Step-by-Step Instructions
+                        </h4>
+
+                        <!-- Step 1 -->
+                        <div style="background: #f8fafc; border-left: 4px solid #B595D8; padding: 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+                            <h5 style="color: #B595D8; font-size: 1.1rem; margin: 0 0 12px 0; font-weight: 600;">
+                                Step 1: Add Customer
+                            </h5>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li><strong>Name:</strong> Enter customer's full name (2-50 characters, letters only)</li>
+                                <li><strong>Phone:</strong> Optional, but must be 10 digits starting with 0 (e.g., 0771234567)</li>
+                                <li><strong>Email:</strong> Optional, but must be a valid email format</li>
+                                <li><strong>Address:</strong> Optional, 5-100 characters if provided</li>
+                            </ul>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div style="background: #f8fafc; border-left: 4px solid #B595D8; padding: 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+                            <h5 style="color: #B595D8; font-size: 1.1rem; margin: 0 0 12px 0; font-weight: 600;">
+                                Step 2: View & Manage Customers
+                            </h5>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li>Search customers by name or phone number</li>
+                                <li>Edit customer information using the <span style="background: #B595D8; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Edit</span> button</li>
+                                <li>Delete customers using the <span style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Delete</span> button</li>
+                                <li>All changes are saved automatically</li>
+                            </ul>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div style="background: #f8fafc; border-left: 4px solid #B595D8; padding: 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+                            <h5 style="color: #B595D8; font-size: 1.1rem; margin: 0 0 12px 0; font-weight: 600;">
+                                Step 3: Generate Bill
+                            </h5>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li>Select a customer from the dropdown (type to search)</li>
+                                <li>Search and select books you want to sell</li>
+                                <li>Check the boxes next to the books</li>
+                                <li>Adjust quantities as needed (cannot exceed stock)</li>
+                                <li>Click "Generate Bill" to create the invoice</li>
+                            </ul>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div style="background: #f8fafc; border-left: 4px solid #B595D8; padding: 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+                            <h5 style="color: #B595D8; font-size: 1.1rem; margin: 0 0 12px 0; font-weight: 600;">
+                                Step 4: View Bill History
+                            </h5>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li>Search bills by customer name or date</li>
+                                <li>Click <span style="background: #B595D8; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">View</span> to see bill details and print</li>
+                                <li>Bills are automatically saved with timestamp</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tips & Tricks -->
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="color: #374151; font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid #E8D5F2; padding-bottom: 8px;">
+                            💡 Tips & Tricks
+                        </h4>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 15px; border-radius: 8px;">
+                                <h6 style="color: #ea580c; margin: 0 0 8px 0; font-size: 1rem;">🔍 Search Features</h6>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.5;">
+                                    Use the search boxes to quickly find customers, books, or bills. 
+                                    Search works in real-time as you type.
+                                </p>
+                            </div>
+
+                            <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 15px; border-radius: 8px;">
+                                <h6 style="color: #059669; margin: 0 0 8px 0; font-size: 1rem;">⚡ Quick Actions</h6>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.5;">
+                                    Use keyboard shortcuts: Enter to submit forms, 
+                                    Escape to close modals, Tab to navigate fields.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px;">
+                                <h6 style="color: #2563eb; margin: 0 0 8px 0; font-size: 1rem;">📊 Data Validation</h6>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.5;">
+                                    The system automatically validates your input. 
+                                    Red error messages will guide you if something needs correction.
+                                </p>
+                            </div>
+
+                            <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 15px; border-radius: 8px;">
+                                <h6 style="color: #d97706; margin: 0 0 8px 0; font-size: 1rem;">💾 Auto-Save</h6>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.5;">
+                                    All data is saved automatically. Bills are timestamped 
+                                    and stored permanently for future reference.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Issues & Solutions -->
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="color: #374151; font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid #E8D5F2; padding-bottom: 8px;">
+                            🔧 Common Issues & Solutions
+                        </h4>
+
+                        <div style="background: #fefefe; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #f9fafb; padding: 15px; border-bottom: 1px solid #e5e7eb;">
+                                <h6 style="margin: 0; color: #374151; font-size: 1rem;">❌ "Please select a customer" error</h6>
+                            </div>
+                            <div style="padding: 15px;">
+                                <p style="margin: 0; color: #6b7280; line-height: 1.5;">
+                                    <strong>Solution:</strong> Make sure to click on a customer from the dropdown list. 
+                                    Just typing the name isn't enough - you must select it from the list.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="background: #fefefe; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-top: 10px;">
+                            <div style="background: #f9fafb; padding: 15px; border-bottom: 1px solid #e5e7eb;">
+                                <h6 style="margin: 0; color: #374151; font-size: 1rem;">❌ "Invalid quantity" error</h6>
+                            </div>
+                            <div style="padding: 15px;">
+                                <p style="margin: 0; color: #6b7280; line-height: 1.5;">
+                                    <strong>Solution:</strong> Check that your quantity is between 1 and the available stock. 
+                                    You cannot sell more books than are in stock.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="background: #fefefe; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-top: 10px;">
+                            <div style="background: #f9fafb; padding: 15px; border-bottom: 1px solid #e5e7eb;">
+                                <h6 style="margin: 0; color: #374151; font-size: 1rem;">❌ Can't find customer or book</h6>
+                            </div>
+                            <div style="padding: 15px;">
+                                <p style="margin: 0; color: #6b7280; line-height: 1.5;">
+                                    <strong>Solution:</strong> Try searching with partial names or phone numbers. 
+                                    Clear the search box to see all available options.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact & Support -->
+                    <div style="background: #e5e7eb; padding: 25px; border-radius: 12px; text-align: center;">
+                        <h4 style="color: #374151; margin: 0 0 15px 0; font-size: 1.2rem;">📞 Need More Help?</h4>
+                        <p style="margin: 0 0 15px 0; color: #6b7280; line-height: 1.6;">
+                            If you encounter any issues or need additional support, please contact the system administrator 
+                            or refer to your training materials.
+                        </p>
+                        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                            <span style="background: #B595D8; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 500;">
+                                📧 support@pahanabookshop.com
+                            </span>
+                            <span style="background: #B595D8; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 500;">
+                                📱 +94 11 123 4567
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Keyboard Shortcuts -->
+                    <div style="margin-top: 30px;">
+                        <h4 style="color: #374151; font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid #E8D5F2; padding-bottom: 8px;">
+                            ⌨️ Keyboard Shortcuts
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #B595D8;">
+                                <strong style="color: #374151;">Tab</strong> - Move to next field
+                            </div>
+                            <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #B595D8;">
+                                <strong style="color: #374151;">Enter</strong> - Submit form
+                            </div>
+                            <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #B595D8;">
+                                <strong style="color: #374151;">Escape</strong> - Close modal
+                            </div>
+                            <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #B595D8;">
+                                <strong style="color: #374151;">Ctrl + F</strong> - Find on page
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- Edit Customer Modal -->
             <div id="customerModal" class="modal">

@@ -128,8 +128,6 @@
                 color: #374151;
             }
 
-
-
             /* Modal styling */
             .modal {
                 display: none;
@@ -253,6 +251,23 @@
                 background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
                 transform: translateY(-2px);
                 box-shadow: 0 4px 12px rgba(181, 149, 216, 0.3);
+            }
+            
+            /* Error message */
+            .error {
+                background-color: #fee2e2;
+                border-left: 4px solid #dc2626;
+                color: #b91c1c;
+                padding: 14px 20px;
+                margin-bottom: 30px;
+                font-weight: 600;
+                border-radius: 6px;
+                user-select: none;
+                display: none;
+            }
+
+            .error.show {
+                display: block;
             }
 
             /* Dashboard Container */
@@ -1511,7 +1526,6 @@
                         </a>
                     </div>
 
-
                     <!-- Support Message Pop-up -->
                     <div id="supportMessage" class="support-message">
                         <div class="support-message-content">
@@ -1521,7 +1535,8 @@
                                 Email: <a href="mailto:support@pahanabookshop.com">support@pahanabookshop.com</a><br>
                                 Phone: +94 11 123 4567<br>
                                 Hours: Monday to Friday, 9 AM to 5 PM
-                            </p>                            <button onclick="closeSupportMessage()">Close</button>
+                            </p>                            
+                            <button onclick="closeSupportMessage()">Close</button>
                         </div>
                     </div>
                 </div>
@@ -1556,92 +1571,92 @@
                 </div>
             </div>
 
-        <form id="deleteForm" method="post" style="display:none;">
-            <input type="hidden" name="action" id="deleteAction">
-            <input type="hidden" name="id" id="deleteId">
-        </form>
+            <form id="deleteForm" method="post" style="display:none;">
+                <input type="hidden" name="action" id="deleteAction">
+                <input type="hidden" name="id" id="deleteId">
+            </form>
 
-        <script>
-            const sidebarLinks = document.querySelectorAll('.sidebar a[data-section]');
-            const sections = document.querySelectorAll('.section');
+            <script>
+                const sidebarLinks = document.querySelectorAll('.sidebar a[data-section]');
+                const sections = document.querySelectorAll('.section');
 
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('data-section');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('data-section');
 
-                    // Remove active class from all
-                    sidebarLinks.forEach(l => l.classList.remove('active'));
-                    sections.forEach(sec => sec.classList.remove('active'));
+                        // Remove active class from all
+                        sidebarLinks.forEach(l => l.classList.remove('active'));
+                        sections.forEach(sec => sec.classList.remove('active'));
 
-                    // Activate current
-                    link.classList.add('active');
-                    document.getElementById(targetId).classList.add('active');
+                        // Activate current
+                        link.classList.add('active');
+                        document.getElementById(targetId).classList.add('active');
+                    });
                 });
-            });
 
-            function filterBooks() {
-                const query = document.getElementById('bookSearch').value.toLowerCase();
-                const rows = document.querySelectorAll('#booksTable tbody tr');
-                rows.forEach(row => {
-                    const title = row.dataset.title || '';
-                    const author = row.dataset.author || '';
-                    const visible = title.toLowerCase().includes(query) || author.toLowerCase().includes(query);
-                    row.style.display = visible ? '' : 'none';
-                });
-            }
-
-            function openModal(modalId) {
-                document.getElementById(modalId).style.display = 'block';
-            }
-
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-            }
-
-            function openEditBookModal(button) {
-                const tr = button.closest('tr');
-                document.getElementById('bookModalTitle').innerText = 'Edit Book';
-                document.getElementById('bookId').value = tr.getAttribute('data-book-id');
-                document.getElementById('bookTitle').value = tr.getAttribute('data-title');
-                document.getElementById('bookAuthor').value = tr.getAttribute('data-author');
-                document.getElementById('bookCategory').value = tr.getAttribute('data-category');
-                document.getElementById('bookStock').value = tr.getAttribute('data-stock');
-                document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
-                document.getElementById('bookYear').value = tr.getAttribute('data-year');
-                document.getElementById('bookPrice').value = tr.getAttribute('data-price');
-                document.getElementById('bookURL').value = tr.getAttribute('data-url');
-                openModal('bookModal');
-            }
-
-            // Delete confirmation
-            function confirmDelete(type, id) {
-                if (confirm('Are you sure you want to delete this ' + type + '?')) {
-                    const form = document.getElementById('deleteForm');
-                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-                    document.getElementById('deleteAction').value = "delete" + capitalizedType;
-                    document.getElementById('deleteId').value = id;
-                    form.submit();
+                function filterBooks() {
+                    const query = document.getElementById('bookSearch').value.toLowerCase();
+                    const rows = document.querySelectorAll('#booksTable tbody tr');
+                    rows.forEach(row => {
+                        const title = row.dataset.title || '';
+                        const author = row.dataset.author || '';
+                        const visible = title.toLowerCase().includes(query) || author.toLowerCase().includes(query);
+                        row.style.display = visible ? '' : 'none';
+                    });
                 }
-            }
 
-            function toggleFAQ(element) {
-                const faqItem = element.closest('.faq-item');
-                const answer = faqItem.querySelector('.faq-answer');
-                const toggle = faqItem.querySelector('.faq-toggle');
+                function openModal(modalId) {
+                    document.getElementById(modalId).style.display = 'block';
+                }
 
-                faqItem.classList.toggle('active');
-                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
-            }
+                function closeModal(modalId) {
+                    document.getElementById(modalId).style.display = 'none';
+                }
 
-            function openSupportMessage(event) {
-                event.preventDefault();
-                document.getElementById('supportMessage').style.display = 'flex';
-            }
+                function openEditBookModal(button) {
+                    const tr = button.closest('tr');
+                    document.getElementById('bookModalTitle').innerText = 'Edit Book';
+                    document.getElementById('bookId').value = tr.getAttribute('data-book-id');
+                    document.getElementById('bookTitle').value = tr.getAttribute('data-title');
+                    document.getElementById('bookAuthor').value = tr.getAttribute('data-author');
+                    document.getElementById('bookCategory').value = tr.getAttribute('data-category');
+                    document.getElementById('bookStock').value = tr.getAttribute('data-stock');
+                    document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
+                    document.getElementById('bookYear').value = tr.getAttribute('data-year');
+                    document.getElementById('bookPrice').value = tr.getAttribute('data-price');
+                    document.getElementById('bookURL').value = tr.getAttribute('data-url');
+                    openModal('bookModal');
+                }
 
-            function closeSupportMessage() {
-                document.getElementById('supportMessage').style.display = 'none';
-            }
-        </script>
+                // Delete confirmation
+                function confirmDelete(type, id) {
+                    if (confirm('Are you sure you want to delete this ' + type + '?')) {
+                        const form = document.getElementById('deleteForm');
+                        let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+                        document.getElementById('deleteAction').value = "delete" + capitalizedType;
+                        document.getElementById('deleteId').value = id;
+                        form.submit();
+                    }
+                }
+
+                function toggleFAQ(element) {
+                    const faqItem = element.closest('.faq-item');
+                    const answer = faqItem.querySelector('.faq-answer');
+                    const toggle = faqItem.querySelector('.faq-toggle');
+
+                    faqItem.classList.toggle('active');
+                    answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+                }
+
+                function openSupportMessage(event) {
+                    event.preventDefault();
+                    document.getElementById('supportMessage').style.display = 'flex';
+                }
+
+                function closeSupportMessage() {
+                    document.getElementById('supportMessage').style.display = 'none';
+                }
+            </script>
     </body>
 </html>

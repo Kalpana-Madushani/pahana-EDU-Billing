@@ -553,6 +553,8 @@
                 <a href="#" data-target="customersSection">👥 Customers</a>
                 <a href="#" data-target="usersSection">🧑 Users</a>
                 <a href="#" data-target="booksSection">📚 Books</a>
+<!--                <a href="#" data-target="pastBillsSection">📋 Bill History</a>
+                <a href="#" data-target="helpSection">❓ Help & Guide</a>-->
                 <a href="login.jsp" class="logout">🔓 Logout</a>
 
                 <div class="sidebar-footer">
