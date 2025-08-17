@@ -30,7 +30,7 @@ public class BookDAO {
 
     public static List<Book> getAllBooks() {
         List<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT * FROM books ORDER BY year ASC";
 
         try (Connection conn = DBConnection.getInstance();
              Statement stmt = conn.createStatement();

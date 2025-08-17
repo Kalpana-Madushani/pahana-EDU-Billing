@@ -17,6 +17,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Cashier Panel</title>
+        <link rel="icon" href="https://img.icons8.com/color/32/000000/cash-register.png" type="image/png">
         <style>
             /* Reset */
             *, *::before, *::after {
@@ -120,6 +121,39 @@
                 font-size: 1.25rem;
                 margin-bottom: 24px;
                 color: #374151;
+            }
+            
+            /* Modal styling */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 10% auto;
+                padding: 32px 36px;
+                border-radius: 12px;
+                width: 500px;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+                position: relative;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+            .close:hover {
+                color: #000;
             }
             
              /* Action buttons */
@@ -387,14 +421,16 @@
                     <tbody>
                         <% for (Customer c : customers) {%>
                         <tr data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : ""%>" 
-                            data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>">
+                            data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>"
+                            data-email="<%= c.getEmail() != null ? c.getEmail().replace("\"", "&quot;") : ""%>"
+                            data-address="<%= c.getAddress() != null ? c.getAddress().replace("\"", "&quot;") : ""%>">
                             <td><%= c.getId()%></td>
                             <td><%= c.getName()%></td>
                             <td><%= c.getPhone()%></td>
                             <td><%= c.getEmail()%></td>
                             <td><%= c.getAddress()%></td>
                             <td>
-                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
+                                 <button class="action-btn edit" onclick="openEditCustomerModal(this)">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -599,7 +635,29 @@
                 <% } else { %>
                 <p style="color:#6b7280; font-style: italic;">No past bills found.</p>
                 <% }%>
-            </section>            
+            </section>   
+            
+            <!-- Edit Customer Modal -->
+            <div id="customerModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('customerModal')">&times;</span>
+                    <h3 id="customerModalTitle">Edit Customer</h3>
+                    <div class="error"></div>
+                    <form id="customerForm" action="${pageContext.request.contextPath}/cashier" method="post">
+                        <input type="hidden" name="action" value="updateCustomer"/>
+                        <input type="hidden" id="customerId" name="id" />
+                        <label for="customerName">Name *</label>
+                        <input type="text" id="customerName" name="name" pattern="[A-Za-z\s\-']{2,50}" required placeholder="Customer Full Name" />
+                        <label for="customerPhone">Phone</label>
+                        <input type="text" id="customerPhone" name="phone" pattern="0[0-9]{9}" placeholder="e.g. +94 77 123 4567" />
+                        <label for="customerEmail">Email</label>
+                        <input type="email" id="customerEmail" name="email" placeholder="example@email.com" />
+                        <label for="customerAddress">Address</label>
+                        <input type="text" id="customerAddress" name="address" placeholder="Customer Address" />
+                        <button type="submit">Save Customer</button>
+                    </form>
+                </div>
+            </div>
         </main>
 
         <script>
@@ -653,6 +711,119 @@
                     }
                 }
             }
+            
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'block';
+            }
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+                const form = document.getElementById('customerForm');
+                if (form) form.reset();
+                const errorDiv = document.querySelector('#customerModal .error');
+                if (errorDiv) {
+                    errorDiv.classList.remove('show');
+                    errorDiv.textContent = '';
+                }
+            }
+            
+             function openEditCustomerModal(button) {
+                const tr = button.closest('tr');
+                document.getElementById('customerModalTitle').innerText = 'Edit Customer';
+                document.getElementById('customerId').value = tr.getAttribute('data-customer-id');
+                document.getElementById('customerName').value = tr.getAttribute('data-name');
+                document.getElementById('customerPhone').value = tr.getAttribute('data-phone');
+                document.getElementById('customerEmail').value = tr.getAttribute('data-email');
+                document.getElementById('customerAddress').value = tr.getAttribute('data-address');
+                openModal('customerModal');
+            }
+            
+            // Delete confirmation
+            function confirmDelete(type, id) {
+                if (confirm('Are you sure you want to delete this ' + type + '?')) {
+                    const form = document.getElementById('deleteForm');
+                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+                    document.getElementById('deleteAction').value = "delete" + capitalizedType;
+                    document.getElementById('deleteId').value = id;
+                    form.submit();
+                }
+            }
+
+            // Form submissions
+            document.getElementById('customerForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const errorDiv = this.querySelector('.error');
+                errorDiv.classList.remove('show');
+                const id = document.getElementById('customerId').value;
+                const name = document.getElementById('customerName').value.trim();
+                const phone = document.getElementById('customerPhone').value.trim();
+                const email = document.getElementById('customerEmail').value.trim();
+                const address = document.getElementById('customerAddress').value.trim();
+                // Basic validation
+                if (!name) {
+                    errorDiv.textContent = 'Name is required.';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+
+                if (id) {
+                    // Edit existing row
+                    let row = document.querySelector(`tr[data-customer-id="${id}"]`);
+                    if (row) {
+                        row.setAttribute('data-name', name);
+                        row.setAttribute('data-phone', phone);
+                        row.setAttribute('data-email', email);
+                        row.setAttribute('data-address', address);
+                        row.cells[1].innerText = name;
+                        row.cells[2].innerText = phone;
+                        row.cells[3].innerText = email;
+                        row.cells[4].innerText = address;
+                    }
+                } else {
+                    // Add new row (simple demo - in real app this would go to server)
+                    const tbody = document.querySelector('#customersTable tbody');
+                    if (tbody) {
+                        const newId = Date.now();
+                        const tr = document.createElement('tr');
+                        tr.setAttribute('data-customer-id', newId);
+                        tr.setAttribute('data-name', name);
+                        tr.setAttribute('data-phone', phone);
+                        tr.setAttribute('data-email', email);
+                        tr.setAttribute('data-address', address);
+                        tr.innerHTML = `
+                            <td>${newId}</td>
+                            <td>${name}</td>
+                            <td>${phone}</td>
+                            <td>${email}</td>
+                            <td>${address}</td>
+                            <td>
+                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path d="M12 20h9"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button class="action-btn delete" onclick="confirmDelete('customer', ${newId})">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path d="M3 6h18"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                }
+
+                closeModal('customerModal');
+                this.reset();
+            });
+            // Close modals when clicking outside
+            window.addEventListener('click', function (e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
 
             // Add Customer form validation
             const customerForm = document.querySelector('#addCustomerSection form');

@@ -16,6 +16,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Admin Dashboard</title>
+        <link rel="icon" href="https://img.icons8.com/color/48/000000/control-panel.png" type="image/png">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             /* Reset */
@@ -591,7 +592,7 @@
                     </div>
                     <div class="summary-card" style="background: #dc2626; color: #fee2e2;">
                         <h4 style="color: inherit;">Active Users</h4>
-                        <p class="count" style="color: inherit;"><%= users != null ? users.stream().filter(u -> "active".equals(u.getStatus())).count() : 0%></p>
+                        <p class="count" style="color: inherit;"><%= users != null ? users.stream().filter(u -> "ACTIVE".equals(u.getStatus())).count() : 0%></p>
                         <small style="opacity: 0.9;">Users currently active</small>
                     </div>
                 </div>
@@ -678,7 +679,6 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
-<!--                            <th>Actions</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -691,21 +691,6 @@
                             <td><%= c.getPhone()%></td>
                             <td><%= c.getEmail()%></td>
                             <td><%= c.getAddress()%></td>
-<!--                            <td>
-                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                    </svg>
-                                    Edit
-                                </button>
-                                <button class="action-btn delete" onclick="confirmDelete('customer', <%= c.getId()%>)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M3 6h18"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </td>-->
                         </tr>
                         <% } %>
                     </tbody>
@@ -755,8 +740,10 @@
                     </thead>
                     <tbody>
                         <% for (User u : users) {%>
-                        <tr data-username="<%= u.getUsername()%>"
-                            data-role="<%= u.getRole()%>">
+                        <tr data-user-id="<%= u.getId()%>"
+                            data-username="<%= u.getUsername()%>"
+                            data-role="<%= u.getRole()%>"
+                            data-status="<%= u.getStatus()%>">
                             <td><%= u.getId()%></td>
                             <td><%= u.getUsername()%></td>
                             <td><%= u.getRole()%></td>
@@ -828,12 +815,16 @@
                     </thead>
                     <tbody>
                         <% for (Book b : books) {%>
-                        <tr data-title="<%= b.getTitle()%>"
+                        <tr data-book-id="<%= b.getId()%>"
+                            data-title="<%= b.getTitle()%>"
                             data-author="<%= b.getAuthor()%>"
                             data-category="<%= b.getCategory()%>"
+                            data-stock="<%= b.getStock()%>"
                             data-publisher="<%= b.getPublisher()%>"
                             data-year="<%= b.getYear()%>"
-                            data-price="<%= b.getPrice()%>">
+                            data-price="<%= b.getPrice()%>"
+                            data-url="<%= b.getImageUrl()%>"
+                            >
                             <td><%= b.getId()%></td>
                             <td><%= b.getTitle()%></td>
                             <td><%= b.getAuthor()%></td>
@@ -841,7 +832,7 @@
                             <td><%= b.getStock()%></td>
                             <td><%= b.getPublisher()%></td>
                             <td><%= b.getYear()%></td>
-                            <td>$<%= b.getPrice()%></td>
+                            <td>Rs.<%= b.getPrice()%></td>
                             <td>
                                 <button class="action-btn edit" onclick="openEditBookModal(this)">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -926,7 +917,7 @@
                 <span class="close" onclick="closeModal('bookModal')">&times;</span>
                 <h3 id="bookModalTitle">Add Book</h3>
                 <div class="error"></div>
-                <form id="bookForm">
+                <form id="bookForm" action="<%=request.getContextPath()%>/books", method="POST">
                     <input type="hidden" id="bookId" name="id" />
                     <label for="bookTitle">Title</label>
                     <input type="text" id="bookTitle" name="title" required />
@@ -942,6 +933,8 @@
                     <input type="number" id="bookYear" name="year" min="1900" max="2100" required />
                     <label for="bookPrice">Price</label>
                     <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
+                    <label for="bookURL">Image URL</label>
+                    <input type="text" id="bookURL" name="url" required />
                     <button type="submit">Save Book</button>
                 </form>
             </div>
@@ -1092,6 +1085,7 @@
 
             function openEditBookModal(button) {
                 const tr = button.closest('tr');
+                openModal('bookModal');
                 document.getElementById('bookModalTitle').innerText = 'Edit Book';
                 document.getElementById('bookId').value = tr.getAttribute('data-book-id');
                 document.getElementById('bookTitle').value = tr.getAttribute('data-title');
@@ -1101,24 +1095,17 @@
                 document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
                 document.getElementById('bookYear').value = tr.getAttribute('data-year');
                 document.getElementById('bookPrice').value = tr.getAttribute('data-price');
-                openModal('bookModal');
+                document.getElementById('bookURL').value = tr.getAttribute('data-url');
             }
 
             // Delete confirmation
             function confirmDelete(type, id) {
                 if (confirm('Are you sure you want to delete this ' + type + '?')) {
-                    // Here you would submit form or call server API to delete
-                    /// alert(type + ' with ID ' + id + ' will be deleted (implement server logic)');
-                    switch (type) {
-                        case 'user':
-                            const form = document.getElementById('deleteForm');
-                            document.getElementById('deleteAction').value = 'deleteUser';
-                            document.getElementById('deleteId').value = id;
-                            form.submit(); // submit the form to AdminServlet
-                        default:
-                            return;
-                    }
-
+                    const form = document.getElementById('deleteForm');
+                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+                    document.getElementById('deleteAction').value = "delete" + capitalizedType;
+                    document.getElementById('deleteId').value = id;
+                    form.submit();
                 }
             }
 

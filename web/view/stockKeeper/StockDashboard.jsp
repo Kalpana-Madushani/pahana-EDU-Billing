@@ -136,6 +136,265 @@
                 box-shadow: none;
             }
 
+            /* Enhanced Dashboard Sections */
+            .dashboard-section {
+                margin-bottom: 40px;
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 32px;
+                box-shadow: 0 8px 24px rgba(181, 149, 216, 0.08);
+                border: 1px solid rgba(232, 213, 242, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .dashboard-section:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(181, 149, 216, 0.12);
+            }
+
+            /* Updated Section Title Styling */
+            .section-title {
+                font-size: 1.5rem !important;
+                font-weight: 700;
+                color: #374151 !important;
+                margin-bottom: 24px !important;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #E8D5F2 !important;
+                border-left: none !important;
+                padding-left: 0 !important;
+            }
+
+            .section-icon {
+                font-size: 1.8rem;
+                padding: 8px;
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0);
+                border-radius: 12px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Enhanced Low Stock Table */
+            .low-stock-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: #ffffff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 16px rgba(181, 149, 216, 0.1);
+            }
+
+            .low-stock-table thead {
+                background: linear-gradient(135deg, #B595D8, #9575CD);
+                color: white;
+            }
+
+            .low-stock-table th {
+                padding: 16px 20px;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.95rem;
+                letter-spacing: 0.5px;
+            }
+
+            .low-stock-table td {
+                padding: 16px 20px;
+                border-bottom: 1px solid #E8D5F2;
+                transition: background-color 0.2s ease;
+            }
+
+            .low-stock-table tbody tr:hover {
+                background: linear-gradient(90deg, rgba(232, 213, 242, 0.1), rgba(255, 255, 255, 0.1));
+            }
+
+            .low-stock-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            /* Stock Level Indicators */
+            .stock-indicator {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-weight: 600;
+                font-size: 0.85rem;
+            }
+
+            .stock-critical {
+                background: linear-gradient(135deg, #fee2e2, #fecaca);
+                color: #dc2626;
+                border: 1px solid #fca5a5;
+            }
+
+            .stock-low {
+                background: linear-gradient(135deg, #fef3c7, #fde68a);
+                color: #d97706;
+                border: 1px solid #fbbf24;
+            }
+
+            /* Book Title Styling in Table */
+            .book-title {
+                font-weight: 600;
+                color: #1f2937;
+                margin-bottom: 4px;
+            }
+
+            .book-meta {
+                font-size: 0.85rem;
+                color: #6b7280;
+            }
+
+            /* Enhanced Recent Books Container */
+            .recent-books-container {
+                background: linear-gradient(135deg, rgba(232, 213, 242, 0.05), rgba(255, 255, 255, 0.8));
+                border-radius: 12px;
+                padding: 24px;
+                border: 1px solid rgba(232, 213, 242, 0.3);
+            }
+
+            .recent-books-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 16px;
+            }
+
+            .recent-book-card {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 20px;
+                border-left: 4px solid #B595D8;
+                box-shadow: 0 4px 12px rgba(181, 149, 216, 0.08);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .recent-book-card:hover {
+                transform: translateX(4px);
+                box-shadow: 0 6px 20px rgba(181, 149, 216, 0.15);
+            }
+
+            .recent-book-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, rgba(232, 213, 242, 0.1), rgba(200, 168, 224, 0.1));
+                border-radius: 0 12px 0 60px;
+            }
+
+            .book-card-header {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .book-icon {
+                font-size: 1.5rem;
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0);
+                padding: 8px;
+                border-radius: 8px;
+                flex-shrink: 0;
+            }
+
+            .book-info h4 {
+                margin: 0 0 4px 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #1f2937;
+                line-height: 1.3;
+            }
+
+            .book-author {
+                font-size: 0.9rem;
+                color: #6b7280;
+                font-style: italic;
+                margin-bottom: 8px;
+            }
+
+            .book-details {
+                display: flex;
+                gap: 16px;
+                font-size: 0.85rem;
+                color: #6b7280;
+                flex-wrap: wrap;
+            }
+
+            .book-detail {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            /* Enhanced Empty State - Override existing */
+            .dashboard-empty {
+                text-align: center !important;
+                padding: 48px 24px !important;
+                background: linear-gradient(135deg, rgba(232, 213, 242, 0.05), rgba(255, 255, 255, 0.8)) !important;
+                border: 2px dashed #E8D5F2 !important;
+                border-radius: 16px !important;
+                color: #6b7280 !important;
+            }
+
+            .empty-icon {
+                font-size: 4rem;
+                margin-bottom: 16px;
+                opacity: 0.6;
+                display: block;
+            }
+
+            .empty-message {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .empty-submessage {
+                font-size: 0.9rem;
+                color: #6b7280;
+                display: block;
+            }
+
+            /* Action Buttons */
+            .section-actions {
+                margin-top: 24px;
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .action-button {
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                color: #374151;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: all 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .action-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(181, 149, 216, 0.3);
+                text-decoration: none;
+                color: #374151;
+            }
+
+
             /* Title */
             .dashboard-title {
                 font-size: 2rem;
@@ -188,15 +447,6 @@
                 font-weight: 600;
             }
 
-            /* Section Titles */
-            .section-title {
-                font-size: 1.4rem;
-                color: #2d3436;
-                margin-bottom: 1rem;
-                border-left: 5px solid #74b9ff;
-                padding-left: 10px;
-            }
-
             /* Table */
             .dashboard-table {
                 width: 100%;
@@ -223,6 +473,17 @@
 
             .dashboard-table tbody tr:hover {
                 background-color: #f0f4f8;
+            }
+            
+            tbody tr:nth-child(odd) {
+                background-color: #ffffff;
+            }
+            tbody tr:nth-child(even) {
+                background-color: #f9fafb;
+            }
+            tbody tr:hover {
+                background-color: #e0e7ff;
+                cursor: pointer;
             }
 
             /* Empty Messages */
@@ -342,8 +603,8 @@
             }
 
             th {
-                background-color: #2c3e50;
-                color: white;
+                background-color: #f9fafb;
+                color: black;
             }
 
             td img {
@@ -371,31 +632,41 @@
             .section.active {
                 display: block;
             }
-
+            
+            /* Action buttons */
             .action-btn {
-                display: inline-block;
-                padding: 6px 12px;
-                margin: 2px;
-                font-size: 14px;
-                font-weight: 500;
-                color: #fff;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
                 text-decoration: none;
-                border-radius: 6px;
-                transition: background 0.3s ease, transform 0.2s ease;
+                margin-right: 8px;
             }
-
-            .edit-btn {
-                background-color: #4CAF50;
+            .action-btn.edit {
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                color: #ffffff;
+                box-shadow: 0 2px 4px rgba(181, 149, 216, 0.3);
             }
-
-
-            .action-btn:hover {
-                text-decoration: none;
+            .action-btn.edit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(181, 149, 216, 0.4);
+                background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
             }
-            .edit-btn:hover {
-                background-color: #45a049;
-                text-decoration: none;
-                transform: scale(1.05);
+            .action-btn.delete {
+                background: #ef4444;
+                color: #ffffff;
+                box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+            }
+            .action-btn.delete:hover {
+                background: #dc2626;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
             }
 
             .delete-btn {
@@ -491,52 +762,108 @@
                     </div>
                 </div>
 
-                <!-- Low Stock Table -->
+                <!-- Low Stock Books Section -->
                 <div class="dashboard-section">
-                    <h2 class="section-title"><span class="section-icon">⚠️</span> Low Stock Books (Stock &lt; 5)</h2>
                     <%
                         List<Book> lowStockBooks = (List<Book>) request.getAttribute("lowStockBooks");
                         if (lowStockBooks != null && !lowStockBooks.isEmpty()) {
                     %>
-                    <table class="dashboard-table">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        Low Stock Alert
+                        <span style="font-size: 0.8rem; font-weight: 400; color: #6b7280; margin-left: auto;">(Stock < 5)</span>
+                    </h2>
+                    <table class="low-stock-table">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Stock</th>
+                                <th>Book Details</th>
+                                <th>Current Stock</th>
+                                <th>Status</th>
+                                <th>Action Needed</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% for (Book b : lowStockBooks) {%>
                             <tr>
-                                <td><%= b.getTitle()%></td>
+                                <td>
+                                    <div class="book-title"><%= b.getTitle()%></div>
+                                    <div class="book-meta"><%= b.getAuthor()%> • <%= b.getCategory()%></div>
+                                </td>
                                 <td><%= b.getStock()%></td>
+                                <td>
+                                    <span class="stock-indicator stock-critical">🔴 Critical</span>
+                                </td>
+                                <td>
+                                    <a href="#" class="action-button">📦 Reorder Now</a>
+                                </td>
                             </tr>
                             <% } %>
                         </tbody>
                     </table>
                     <% } else { %>
-                    <p class="dashboard-empty">🎉 No books are low in stock!</p>
-                    <% } %>
+                    <div class="dashboard-section" style="margin-top: 20px;">
+                        <h2 class="section-title">
+                            <span class="section-icon">🎉</span>
+                            Well-Stocked Books
+                        </h2>
+
+                        <div class="dashboard-empty">
+                            <div class="empty-icon">🎉</div>
+                            <div class="empty-message">All books are well-stocked!</div>
+                            <div class="empty-submessage">No books currently have stock levels below 5 units.</div>
+                        </div>
+                    </div>
+                    <% }%>
                 </div>
 
-                <!-- Recent Books -->
+                <!-- Recent Books Section -->
                 <div class="dashboard-section">
-                    <h2 class="section-title">🆕 Recently Added Books</h2>
+                    <h2 class="section-title">
+                        <span class="section-icon">🆕</span>
+                        Recently Added Books
+                        <span style="font-size: 0.8rem; font-weight: 400; color: #6b7280; margin-left: auto;">Latest additions</span>
+                    </h2>
                     <%
                         List<Book> recentBooks = (List<Book>) request.getAttribute("recentBooks");
                         if (recentBooks != null && !recentBooks.isEmpty()) {
                     %>
-                    <ul class="recent-books-list">
-                        <% for (Book b : recentBooks) {%>
-                        <li><span class="recent-book-icon">📘</span> <strong><%= b.getTitle()%></strong> by <em><%= b.getAuthor()%></em></li>
-                            <% } %>
-                    </ul>
+                    <div class="recent-books-container">
+                        <div class="recent-books-grid">
+                            <% for (Book b : recentBooks) {%>
+                            <div class="recent-book-card">
+                                <div class="book-card-header">
+                                    <div class="book-icon">📘</div>
+                                    <div class="book-info">
+                                        <h4><%= b.getTitle()%></h4>
+                                        <div class="book-author"><%= b.getAuthor()%></div>
+                                    </div>
+                                </div>
+                                <div class="book-details">
+                                    <div class="book-detail">
+                                        <span>📚</span>
+                                        <span><%= b.getCategory()%></span>
+                                    </div>
+                                    <div class="book-detail">
+                                        <span>📦</span>
+                                        <span><%= b.getStock()%> in stock</span>
+                                    </div>
+                                    <div class="book-detail">
+                                        <span>💰</span>
+                                        <span>Rs. <%= b.getPrice()%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }%>
+                        </div>
+                    </div>
                     <% } else { %>
                     <p class="dashboard-empty">📭 No recent books found.</p>
                     <% }%>
+                    <div class="section-actions">
+                        <a href="#" class="action-button">📚 View All Books</a>
+                    </div>
                 </div>
             </section>
-                
 
             <!--Add book section-->
             <section id="bookForm" class="section dashboard-wrapper">
@@ -582,53 +909,74 @@
                             />
                     </div>
                 </div>
-
-                <%
+                
+                 <%
                     List<Book> books = (List<Book>) request.getAttribute("books");
                     if (books != null && !books.isEmpty()) {
                 %>
-
                 <table id="booksTable">
                     <thead>
                         <tr>
-                            <th>ID</th><th>Title</th><th>Author</th><th>Stock</th><th>Price</th><th>Image</th><th>Actions</th>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Publisher</th>
+                            <th>Year</th>
+                            <th>Price</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% for (Book b : books) {%>
-                        <tr data-title="<%= b.getTitle() != null ? b.getTitle().replace("\"", "&quot;") : ""%>" 
-                            data-author="<%= b.getAuthor() != null ? b.getAuthor().replace("\"", "&quot;") : ""%>">
-                            <td data-label="ID"><%= b.getId()%></td>
-                            <td data-label="Title"><%= b.getTitle()%></td>
-                            <td data-label="Author"><%= b.getAuthor()%></td>
-                            <td data-label="Stock"><%= b.getStock()%></td>
-                            <td data-label="Price">Rs. <%= b.getPrice()%></td>
-                            <td data-label="Image">
-                                <% if (b.getImageUrl() != null && !b.getImageUrl().isEmpty()) {%>
-                                <img src="<%= b.getImageUrl()%>" alt="Book Image">
-                                <% } else { %>
-                                <span>No image</span>
-                                <% }%>
-                            </td>
-                            <td data-label="Actions" class="action-links">
-                                <a href="books?action=edit&id=<%= b.getId()%>" class="action-btn edit-btn">
-                                    ✏️ Edit
-                                </a>
-                                <a href="books?action=delete&id=<%= b.getId()%>" 
-                                   class="action-btn delete-btn" 
-                                   onclick="return confirm('Are you sure?');">
-                                    🗑️ Delete
-                                </a>
+                        <tr data-book-id="<%= b.getId()%>"
+                            data-title="<%= b.getTitle()%>"
+                            data-author="<%= b.getAuthor()%>"
+                            data-category="<%= b.getCategory()%>"
+                            data-stock="<%= b.getStock()%>"
+                            data-publisher="<%= b.getPublisher()%>"
+                            data-year="<%= b.getYear()%>"
+                            data-price="<%= b.getPrice()%>"
+                            data-url="<%= b.getImageUrl()%>"
+                            >
+                            <td><%= b.getId()%></td>
+                            <td><%= b.getTitle()%></td>
+                            <td><%= b.getAuthor()%></td>
+                            <td><%= b.getCategory()%></td>
+                            <td><%= b.getStock()%></td>
+                            <td><%= b.getPublisher()%></td>
+                            <td><%= b.getYear()%></td>
+                            <td>Rs.<%= b.getPrice()%></td>
+                            <td>
+                                <button class="action-btn edit" onclick="openEditBookModal(this)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button class="action-btn delete" onclick="confirmDelete('book', <%= b.getId()%>)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M3 6h18"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                                    </svg>
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                         <% } %>
                     </tbody>
                 </table>
                 <% } else { %>
-                <p>No books found.</p>
+                <p style="color:#6b7280; font-style: italic;">No books found.</p>
                 <% }%>
             </section>
         </div>
+
+        <form id="deleteForm" method="post" style="display:none;">
+            <input type="hidden" name="action" id="deleteAction">
+            <input type="hidden" name="id" id="deleteId">
+        </form>
 
         <script>
             const sidebarLinks = document.querySelectorAll('.sidebar a[data-section]');
@@ -658,6 +1006,32 @@
                     const visible = title.toLowerCase().includes(query) || author.toLowerCase().includes(query);
                     row.style.display = visible ? '' : 'none';
                 });
+            }
+            
+            function openEditBookModal(button) {
+                const tr = button.closest('tr');
+                document.getElementById('bookModalTitle').innerText = 'Edit Book';
+                document.getElementById('bookId').value = tr.getAttribute('data-book-id');
+                document.getElementById('bookTitle').value = tr.getAttribute('data-title');
+                document.getElementById('bookAuthor').value = tr.getAttribute('data-author');
+                document.getElementById('bookCategory').value = tr.getAttribute('data-category');
+                document.getElementById('bookStock').value = tr.getAttribute('data-stock');
+                document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
+                document.getElementById('bookYear').value = tr.getAttribute('data-year');
+                document.getElementById('bookPrice').value = tr.getAttribute('data-price');
+                document.getElementById('bookURL').value = tr.getAttribute('data-url');
+                openModal('bookModal');
+            }
+
+            // Delete confirmation
+            function confirmDelete(type, id) {
+                if (confirm('Are you sure you want to delete this ' + type + '?')) {
+                    const form = document.getElementById('deleteForm');
+                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+                    document.getElementById('deleteAction').value = "delete" + capitalizedType;
+                    document.getElementById('deleteId').value = id;
+                    form.submit();
+                }
             }
         </script>
     </body>
