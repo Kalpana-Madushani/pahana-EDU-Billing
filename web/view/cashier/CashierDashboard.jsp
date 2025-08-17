@@ -122,7 +122,7 @@
                 margin-bottom: 24px;
                 color: #374151;
             }
-            
+
             /* Modal styling */
             .modal {
                 display: none;
@@ -155,8 +155,8 @@
             .close:hover {
                 color: #000;
             }
-            
-             /* Action buttons */
+
+            /* Action buttons */
             .action-btn {
                 display: inline-flex;
                 align-items: center;
@@ -203,6 +203,7 @@
 
             form input[type="text"],
             form input[type="email"],
+            form input[type="phone"],
             form input[type="number"],
             form select {
                 width: 100%;
@@ -217,6 +218,7 @@
             }
             form input[type="text"]:focus,
             form input[type="email"]:focus,
+            form input[type="phone"]:focus,
             form input[type="number"]:focus,
             form select:focus {
                 border-color: #B595D8;
@@ -359,6 +361,7 @@
                 <a href="#" data-target="customerListSection">👥 View Customers</a>
                 <a href="#" data-target="generateBillSection">📜 Generate Bill</a> 
                 <a href="#" data-target="pastBillsSection">📋 Bill History</a>
+                <a href="#" data-target="helpSection">❓ Help & Guide</a>
                 <a href="login.jsp" class="logout">🔓 Logout</a>
             </nav>
         </aside>
@@ -377,7 +380,7 @@
                     <input id="name" name="name" type="text" pattern="[A-Za-z\s\-']{2,50}" required placeholder="Customer Full Name" />
 
                     <label for="phone">Phone</label>
-                    <input id="phone" name="phone" type="text" pattern="0[0-9]{9}" placeholder="e.g. +94 77 123 4567" />
+                    <input id="phone" name="phone" type="number" pattern="0[0-9]{9}" placeholder="e.g. +94 77 123 4567" />
 
                     <label for="email">Email</label>
                     <input id="email" name="email" type="email" placeholder="example@email.com" />
@@ -430,7 +433,7 @@
                             <td><%= c.getEmail()%></td>
                             <td><%= c.getAddress()%></td>
                             <td>
-                                 <button class="action-btn edit" onclick="openEditCustomerModal(this)">
+                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -459,74 +462,86 @@
                 <div class="error"></div>
                 <form action="${pageContext.request.contextPath}/cashier" method="post">
                     <input type="hidden" name="action" value="createBill"/>
-
-                    <!-- Select Customer Drop-down -->
                     <label for="customerSelect">Select Customer *</label>
-                    <div style="position: relative; width: 100%; margin-bottom: 20px;">
-                        <!-- Hidden input to store the actual customer ID -->
-                        <input type="hidden" id="selectedCustomerId" name="customerId" required />
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <!-- Select Customer Drop-down -->
+                        <div style="position: relative; width: 100%;">
+                            <!-- Hidden input to store the actual customer ID -->
+                            <input type="hidden" id="selectedCustomerId" name="customerId" required />
 
-                        <!-- Searchable input field -->
-                        <input 
-                            type="text" 
-                            id="customerSearchInput" 
-                            placeholder="Type to search customer name or phone..." 
-                            autocomplete="off"
-                            style="width: 100%; padding: 10px 40px 10px 14px; border: 1px solid #E8D5F2; border-radius: 8px; font-size: 15px; color: #374151; background-color: #ffffff; transition: border-color 0.2s ease;"
-                            onfocus="showDropdown()" 
-                            oninput="filterCustomerOptions()" 
-                            onblur="hideDropdownDelayed()"
-                            />
+                            <!-- Searchable input field -->
+                            <input 
+                                type="text" 
+                                id="customerSearchInput" 
+                                placeholder="Type to search customer name or phone..." 
+                                autocomplete="off"
+                                style="width: 100%; padding: 10px 40px 10px 14px; border: 1px solid #E8D5F2; border-radius: 8px; font-size: 15px; color: #374151; background-color: #ffffff; transition: border-color 0.2s ease;"
+                                onfocus="showDropdown()" 
+                                oninput="filterCustomerOptions()" 
+                                onblur="hideDropdownDelayed()"
+                                />
 
-                        <!-- Black Drop-down Arrow -->
-                        <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #000000;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6,9 12,15 18,9"></polyline>
-                            </svg>
+                            <!-- Black Drop-down Arrow -->
+                            <div style="position: absolute; right: 12px; top: 35%; transform: translateY(-50%); pointer-events: none; color: #000000;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6,9 12,15 18,9"></polyline>
+                                </svg>
+                            </div>
+
+                            <!-- Drop-down list -->
+                            <div id="customerDropdownList" style="
+                                 position: absolute;
+                                 top: 100%;
+                                 left: 0;
+                                 right: 0;
+                                 background: white;
+                                 border: 1px solid #E8D5F2;
+                                 border-radius: 8px;
+                                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                                 max-height: 200px;
+                                 overflow-y: auto;
+                                 z-index: 1000;
+                                 display: none;
+                                 ">
+                                <% if (customers != null && !customers.isEmpty()) {
+                                        for (Customer c : customers) {%>
+                                <div class="customer-option" 
+                                     data-id="<%= c.getId()%>" 
+                                     data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : ""%>" 
+                                     data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>"
+                                     onclick="selectCustomer(<%= c.getId()%>, '<%= c.getName() != null ? c.getName().replace("'", "\\'") : ""%>', '<%= c.getPhone() != null ? c.getPhone().replace("'", "\\'") : ""%>')"
+                                     style="
+                                     padding: 12px 14px;
+                                     cursor: pointer;
+                                     border-bottom: 1px solid #f3f4f6;
+                                     transition: background-color 0.2s ease;
+                                     "
+                                     onmouseover="this.style.backgroundColor = '#f3f4f6'" 
+                                     onmouseout="this.style.backgroundColor = 'white'">
+                                    <span style="font-weight: 600; color: #374151;"><%= c.getName()%></span>
+                                    <span style="color: #6b7280; margin-left: 8px;">- <%= c.getPhone()%></span>
+                                </div>
+                                <%  }
+                                } else { %>
+                                <div style="padding: 12px 14px; color: #6b7280; font-style: italic;">No customers available</div>
+                                <% } %>
+                            </div>
                         </div>
 
-                        <!-- Drop-down list -->
-                        <div id="customerDropdownList" style="
-                             position: absolute;
-                             top: 100%;
-                             left: 0;
-                             right: 0;
-                             background: white;
-                             border: 1px solid #E8D5F2;
-                             border-radius: 8px;
-                             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                             max-height: 200px;
-                             overflow-y: auto;
-                             z-index: 1000;
-                             display: none;
-                             ">
-                            <% if (customers != null && !customers.isEmpty()) {
-                            for (Customer c : customers) {%>
-                            <div class="customer-option" 
-                                 data-id="<%= c.getId()%>" 
-                                 data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : ""%>" 
-                                 data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>"
-                                 onclick="selectCustomer(<%= c.getId()%>, '<%= c.getName() != null ? c.getName().replace("'", "\\'") : ""%>', '<%= c.getPhone() != null ? c.getPhone().replace("'", "\\'") : ""%>')"
-                                 style="
-                                 padding: 12px 14px;
-                                 cursor: pointer;
-                                 border-bottom: 1px solid #f3f4f6;
-                                 transition: background-color 0.2s ease;
-                                 "
-                                 onmouseover="this.style.backgroundColor = '#f3f4f6'" 
-                                 onmouseout="this.style.backgroundColor = 'white'">
-                                <span style="font-weight: 600; color: #374151;"><%= c.getName()%></span>
-                                <span style="color: #6b7280; margin-left: 8px;">- <%= c.getPhone()%></span>
-                            </div>
-                            <%  }
-                    } else { %>
-                            <div style="padding: 12px 14px; color: #6b7280; font-style: italic;">No customers available</div>
-                            <% } %>
+                        <div style="position: relative; min-width: 400px;">
+                            <input 
+                                type="text" 
+                                id="bookSearch" 
+                                placeholder="Search book by title..." 
+                                oninput="filterBooks()"
+                                style="width: 100%; padding: 10px 40px 10px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 15px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                                onfocus="this.style.borderColor = '#E8D5F2';"
+                                onblur="this.style.borderColor = '#E8D5F2';"
+                                />
                         </div>
                     </div>
-
                     <!-- Books Table -->
-                    <table>
+                    <table id="booksTable">
                         <thead>
                             <tr>
                                 <th>Select</th>
@@ -538,8 +553,8 @@
                         </thead>
                         <tbody>
                             <% if (books != null && !books.isEmpty()) {
-                        for (Book b : books) {%>
-                            <tr>
+                                    for (Book b : books) {%>
+                            <tr data-title="<%= b.getTitle() != null ? b.getTitle().replace("\"", "&quot;") : ""%>">
                                 <td>
                                     <input type="checkbox" name="selected" value="<%= b.getId()%>" />
                                 </td>
@@ -553,7 +568,7 @@
                                 </td>
                             </tr>
                             <%  }
-                } else { %>
+                            } else { %>
                             <tr><td colspan="5" style="text-align:center; color:#6b7280;">No books available</td></tr>
                             <% } %>
                         </tbody>
@@ -636,14 +651,14 @@
                 <p style="color:#6b7280; font-style: italic;">No past bills found.</p>
                 <% }%>
             </section>   
-            
+
             <!-- Edit Customer Modal -->
             <div id="customerModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeModal('customerModal')">&times;</span>
                     <h3 id="customerModalTitle">Edit Customer</h3>
                     <div class="error"></div>
-                    <form id="customerForm" action="${pageContext.request.contextPath}/cashier" method="post">
+                    <form id="customerForm" action="${pageContext.request.contextPath}/cashier" method="POST">
                         <input type="hidden" name="action" value="updateCustomer"/>
                         <input type="hidden" id="customerId" name="id" />
                         <label for="customerName">Name *</label>
@@ -693,6 +708,17 @@
                 });
             }
 
+            function filterBooks() {
+                const query = document.getElementById('bookSearch').value.toLowerCase();
+                const rows = document.querySelectorAll('#booksTable tbody tr');
+                rows.forEach(row => {
+                    const title = row.dataset.title || '';
+
+                    const visible = title.includes(query);
+                    row.style.display = visible ? '' : 'none';
+                });
+            }
+
             function filterBills() {
                 const query = document.getElementById('billSearch').value.trim().toLowerCase();
                 const table = document.getElementById('billsTable');
@@ -711,7 +737,7 @@
                     }
                 }
             }
-            
+
             function openModal(modalId) {
                 document.getElementById(modalId).style.display = 'block';
             }
@@ -719,15 +745,16 @@
             function closeModal(modalId) {
                 document.getElementById(modalId).style.display = 'none';
                 const form = document.getElementById('customerForm');
-                if (form) form.reset();
+                if (form)
+                    form.reset();
                 const errorDiv = document.querySelector('#customerModal .error');
                 if (errorDiv) {
                     errorDiv.classList.remove('show');
                     errorDiv.textContent = '';
                 }
             }
-            
-             function openEditCustomerModal(button) {
+
+            function openEditCustomerModal(button) {
                 const tr = button.closest('tr');
                 document.getElementById('customerModalTitle').innerText = 'Edit Customer';
                 document.getElementById('customerId').value = tr.getAttribute('data-customer-id');
@@ -737,7 +764,7 @@
                 document.getElementById('customerAddress').value = tr.getAttribute('data-address');
                 openModal('customerModal');
             }
-            
+
             // Delete confirmation
             function confirmDelete(type, id) {
                 if (confirm('Are you sure you want to delete this ' + type + '?')) {
@@ -778,40 +805,6 @@
                         row.cells[2].innerText = phone;
                         row.cells[3].innerText = email;
                         row.cells[4].innerText = address;
-                    }
-                } else {
-                    // Add new row (simple demo - in real app this would go to server)
-                    const tbody = document.querySelector('#customersTable tbody');
-                    if (tbody) {
-                        const newId = Date.now();
-                        const tr = document.createElement('tr');
-                        tr.setAttribute('data-customer-id', newId);
-                        tr.setAttribute('data-name', name);
-                        tr.setAttribute('data-phone', phone);
-                        tr.setAttribute('data-email', email);
-                        tr.setAttribute('data-address', address);
-                        tr.innerHTML = `
-                            <td>${newId}</td>
-                            <td>${name}</td>
-                            <td>${phone}</td>
-                            <td>${email}</td>
-                            <td>${address}</td>
-                            <td>
-                                <button class="action-btn edit" onclick="openEditCustomerModal(this)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                        <path d="M12 20h9"/>
-                                    </svg>
-                                    Edit
-                                </button>
-                                <button class="action-btn delete" onclick="confirmDelete('customer', ${newId})">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                        <path d="M3 6h18"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
                     }
                 }
 

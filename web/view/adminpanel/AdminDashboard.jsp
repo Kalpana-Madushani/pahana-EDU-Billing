@@ -15,7 +15,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Dashboard</title>
+        <title>Admin Panel</title>
         <link rel="icon" href="https://img.icons8.com/color/48/000000/control-panel.png" type="image/png">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
@@ -1382,14 +1382,11 @@
                 });
             }
         </script>
-
-
         <script>
             window.addEventListener('load', () => {
                 console.log('Page loaded or reloaded. Current URL:', window.location.href);
             });
 
         </script>
-
     </body>
 </html>

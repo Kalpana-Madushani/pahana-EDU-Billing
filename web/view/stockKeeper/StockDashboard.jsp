@@ -127,6 +127,134 @@
                 margin-bottom: 24px;
                 color: #374151;
             }
+
+
+
+            /* Modal styling */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4);
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 10% auto;
+                padding: 32px 36px;
+                border-radius: 12px;
+                width: 500px;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+                position: relative;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+            .close:hover {
+                color: #000;
+            }
+
+            /* Support Message Pop-up */
+            .support-message {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for better contrast */
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.3s ease-in-out;
+            }
+
+            .support-message-content {
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 24px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 8px 24px rgba(181, 149, 216, 0.2);
+                text-align: center;
+            }
+
+            .support-message-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 2px solid #E8D5F2;
+            }
+
+            .support-icon {
+                font-size: 1.8rem;
+                padding: 8px;
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0);
+                border-radius: 12px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .support-message-content h3 {
+                margin: 0;
+                color: #374151;
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+
+            .support-message-content p {
+                color: #6b7280;
+                font-size: 1rem;
+                line-height: 1.8;
+                margin: 0 0 20px 0;
+            }
+
+            .support-message-content a {
+                color: #B595D8;
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+            .support-message-content a:hover {
+                text-decoration: underline;
+            }
+
+            .support-message-actions {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .support-message-content button {
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                border: none;
+                color: #ffffff;
+                padding: 12px 28px;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .support-message-content button:hover {
+                background: linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(181, 149, 216, 0.3);
+            }
+
             /* Dashboard Container */
             .dashboard-wrapper {
                 background-color: #f3f4f6;
@@ -474,7 +602,7 @@
             .dashboard-table tbody tr:hover {
                 background-color: #f0f4f8;
             }
-            
+
             tbody tr:nth-child(odd) {
                 background-color: #ffffff;
             }
@@ -632,7 +760,7 @@
             .section.active {
                 display: block;
             }
-            
+
             /* Action buttons */
             .action-btn {
                 display: inline-flex;
@@ -683,6 +811,232 @@
                 margin-right: 5px;
             }
 
+            /* Help Section Styles */
+            .help-wrapper {
+                background-color: #f3f4f6;
+                border-radius: 8px;
+                padding: 32px 36px;
+                margin-bottom: 32px;
+                box-shadow: none;
+            }
+
+            .help-container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .help-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 24px;
+                margin-bottom: 32px;
+            }
+
+            .help-card {
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 24px;
+                box-shadow: 0 4px 16px rgba(181, 149, 216, 0.08);
+                border: 1px solid rgba(232, 213, 242, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .help-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 24px rgba(181, 149, 216, 0.12);
+            }
+
+            .help-card-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 2px solid #E8D5F2;
+            }
+
+            .help-icon {
+                font-size: 2rem;
+                padding: 12px;
+                background: linear-gradient(135deg, #E8D5F2, #C8A8E0);
+                border-radius: 12px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .help-card h4 {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: #374151;
+                margin: 0;
+            }
+
+            .help-card p {
+                color: #6b7280;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+            .help-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .help-list li {
+                padding: 8px 0;
+                padding-left: 24px;
+                position: relative;
+                color: #374151;
+                line-height: 1.5;
+            }
+
+            .help-list li::before {
+                content: "→";
+                position: absolute;
+                left: 0;
+                color: #B595D8;
+                font-weight: bold;
+            }
+
+            .help-tip {
+                background: linear-gradient(135deg, rgba(232, 213, 242, 0.1), rgba(255, 255, 255, 0.8));
+                border-left: 4px solid #B595D8;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 16px 0;
+            }
+
+            .help-tip-title {
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .help-tip-content {
+                color: #6b7280;
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            .shortcut-key {
+                background: #E8D5F2;
+                color: #374151;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                font-weight: 600;
+                margin: 0 2px;
+            }
+
+            .feature-highlight {
+                background: linear-gradient(135deg, rgba(232, 213, 242, 0.05), rgba(255, 255, 255, 0.8));
+                border: 1px solid rgba(232, 213, 242, 0.3);
+                border-radius: 12px;
+                padding: 20px;
+                margin: 16px 0;
+            }
+
+            .faq-section {
+                margin-top: 32px;
+            }
+
+            .faq-item {
+                background: #ffffff;
+                border-radius: 12px;
+                margin-bottom: 12px;
+                box-shadow: 0 2px 8px rgba(181, 149, 216, 0.05);
+                border: 1px solid rgba(232, 213, 242, 0.2);
+                overflow: hidden;
+            }
+
+            .faq-question {
+                padding: 16px 20px;
+                background: linear-gradient(135deg, #E8D5F2, rgba(200, 168, 224, 0.3));
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: 600;
+                color: #374151;
+                transition: all 0.3s ease;
+            }
+
+            .faq-question:hover {
+                background: linear-gradient(135deg, #D1BAE8, rgba(181, 149, 216, 0.3));
+            }
+
+            .faq-answer {
+                padding: 16px 20px;
+                color: #6b7280;
+                line-height: 1.6;
+                border-top: 1px solid rgba(232, 213, 242, 0.3);
+                background: #ffffff;
+            }
+
+            .faq-toggle {
+                font-size: 1.2rem;
+                transition: transform 0.3s ease;
+            }
+
+            .faq-item.active .faq-toggle {
+                transform: rotate(180deg);
+            }
+
+            .contact-support {
+                background: linear-gradient(135deg, #B595D8, #9575CD);
+                color: white;
+                border-radius: 16px;
+                padding: 24px;
+                text-align: center;
+                margin-top: 32px;
+            }
+
+            .contact-support h4 {
+                margin: 0 0 12px 0;
+                font-size: 1.5rem;
+                font-weight: 700;
+            }
+
+            .contact-support p {
+                margin: 0 0 16px 0;
+                opacity: 0.9;
+            }
+
+            .contact-btn {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                padding: 12px 24px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .contact-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                border-color: rgba(255, 255, 255, 0.5);
+                transform: translateY(-2px);
+            }
+
+            /* Animation for smooth appearance */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
             @media screen and (max-width: 768px) {
                 .dashboard-cards {
                     flex-direction: column;
@@ -691,6 +1045,14 @@
                 table th, table td {
                     padding: 12px 10px;
                     font-size: 13px;
+                }
+
+                .help-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .help-card {
+                    padding: 20px;
                 }
             }
         </style>
@@ -702,6 +1064,7 @@
             <a href="#" class="active" data-section="dashboard">📊 Dashboard</a>
             <a href="#" data-section="bookForm">➕ Add Book</a>
             <a href="#" data-section="manageBooks">📘 Manage Books</a>
+            <a href="#" data-section="help">❓ Help & Guide</a>
             <a href="login.jsp" class="logout">🔓 Logout</a>
         </div>
 
@@ -867,27 +1230,24 @@
 
             <!--Add book section-->
             <section id="bookForm" class="section dashboard-wrapper">
-                <h3>2. <%= (editBook != null) ? "Edit Book" : "Add New Book"%></h3>
+                <h3>2. Add New Book</h3>
                 <form action="${pageContext.request.contextPath}/books" method="post">
-                    <% if (editBook != null) {%>
-                    <input type="hidden" name="id" value="<%= editBook.getId()%>" />
-                    <% }%>
                     <label for="book_title">Book Title *</label>
-                    <input type="text" name="title" placeholder="e.g., The Great Gatsby" value="<%= (editBook != null) ? editBook.getTitle() : ""%>" required />
+                    <input type="text" name="title" placeholder="e.g., The Great Gatsby" required />
                     <label for="author">Author *</label>
-                    <input type="text" name="author" placeholder="e.g., F. Scott Fitzgerald" value="<%= (editBook != null) ? editBook.getAuthor() : ""%>" required />
+                    <input type="text" name="author" placeholder="e.g., F. Scott Fitzgerald" required />
                     <label for="category">Category *</label>
-                    <input type="text" name="category" placeholder="Category" value="<%= (editBook != null) ? editBook.getCategory() : ""%>" required />
+                    <input type="text" name="category" placeholder="Category" required />
                     <label for="stock_quantity">Stock Quantity *</label>
-                    <input type="number" name="stock" placeholder="e.g., 25" value="<%= (editBook != null) ? editBook.getStock() : ""%>" required />
+                    <input type="number" name="stock" placeholder="e.g., 25" required />
                     <label for="publisher">Publisher *</label>
-                    <input type="text" name="publisher" placeholder="e.g., Penguin Books" value="<%= (editBook != null) ? editBook.getPublisher() : ""%>" required />
+                    <input type="text" name="publisher" placeholder="e.g., Penguin Books" required />
                     <label for="publication_year">Publication Year *</label>
-                    <input type="number" name="year" placeholder="e.g., 2024" value="<%= (editBook != null) ? editBook.getYear() : ""%>" required />
+                    <input type="number" name="year" placeholder="e.g., 2024" required />
                     <label for="price">Price *</label>
-                    <input type="number" step="0.01" name="price" placeholder="e.g., 1250.00" value="<%= (editBook != null) ? editBook.getPrice() : ""%>" required />
+                    <input type="number" step="0.01" name="price" placeholder="e.g., 1250.00" required />
                     <label for="image">Book Cover Image *</label>
-                    <input type="text" name="imageUrl" placeholder="Image URL (optional)" value="<%= (editBook != null) ? editBook.getImageUrl() : ""%>" />
+                    <input type="text" name="imageUrl" placeholder="Image URL (optional)" />
 
                     <button type="submit"><%= (editBook != null) ? "Update Book" : "Add Book"%></button>
                 </form>
@@ -909,8 +1269,8 @@
                             />
                     </div>
                 </div>
-                
-                 <%
+
+                <%
                     List<Book> books = (List<Book>) request.getAttribute("books");
                     if (books != null && !books.isEmpty()) {
                 %>
@@ -971,7 +1331,230 @@
                 <p style="color:#6b7280; font-style: italic;">No books found.</p>
                 <% }%>
             </section>
-        </div>
+
+            <!--        Help section-->
+            <section id="help" class="section dashboard-wrapper">
+                <div class="help-container">
+                    <h3>4. Help & User Guide</h3>
+
+                    <!-- Quick Start Cards -->
+                    <div class="help-grid">
+                        <div class="help-card">
+                            <div class="help-card-header">
+                                <div class="help-icon">📊</div>
+                                <h4>Dashboard Overview</h4>
+                            </div>
+                            <p>Your central hub for monitoring bookstore inventory and performance.</p>
+                            <ul class="help-list">
+                                <li>View key metrics: total books, stock, and inventory value</li>
+                                <li>Monitor low stock alerts for books with less than 5 units</li>
+                                <li>Check recently added books</li>
+                                <li>Track unique authors and categories</li>
+                            </ul>
+                            <div class="help-tip">
+                                <div class="help-tip-title">💡 Pro Tip</div>
+                                <div class="help-tip-content">Check the dashboard daily to stay on top of low stock alerts and avoid stockouts.</div>
+                            </div>
+                        </div>
+
+                        <div class="help-card">
+                            <div class="help-card-header">
+                                <div class="help-icon">➕</div>
+                                <h4>Adding Books</h4>
+                            </div>
+                            <p>Easy steps to add new books to your inventory.</p>
+                            <ul class="help-list">
+                                <li>Fill in all required fields marked with (*)</li>
+                                <li>Use descriptive titles and accurate author names</li>
+                                <li>Set appropriate stock quantities</li>
+                                <li>Add book cover image URL for better presentation</li>
+                            </ul>
+                            <div class="help-tip">
+                                <div class="help-tip-title">⚡ Quick Tip</div>
+                                <div class="help-tip-content">Use consistent category naming (e.g., "Fiction", "Non-Fiction") to maintain organization.</div>
+                            </div>
+                        </div>
+
+                        <div class="help-card">
+                            <div class="help-card-header">
+                                <div class="help-icon">📘</div>
+                                <h4>Managing Books</h4>
+                            </div>
+                            <p>Efficiently organize and update your book inventory.</p>
+                            <ul class="help-list">
+                                <li>Search books by title or author using the search bar</li>
+                                <li>Edit book details by clicking the Edit button</li>
+                                <li>Delete books with confirmation to prevent accidents</li>
+                                <li>View all book information in the organized table</li>
+                            </ul>
+                            <div class="help-tip">
+                                <div class="help-tip-title">🔍 Search Tip</div>
+                                <div class="help-tip-content">Use partial names in search - typing "Harry" will find "Harry Potter" books.</div>
+                            </div>
+                        </div>
+
+                        <div class="help-card">
+                            <div class="help-card-header">
+                                <div class="help-icon">🛡️</div>
+                                <h4>Best Practices</h4>
+                            </div>
+                            <p>Follow these guidelines for optimal inventory management.</p>
+                            <ul class="help-list">
+                                <li>Update stock levels regularly after sales or restocking</li>
+                                <li>Use consistent pricing format (e.g., 1250.00)</li>
+                                <li>Keep book information accurate and up-to-date</li>
+                                <li>Monitor low stock alerts to prevent stockouts</li>
+                            </ul>
+                            <div class="help-tip">
+                                <div class="help-tip-title">📈 Business Tip</div>
+                                <div class="help-tip-content">Set reorder points based on your sales velocity to maintain optimal stock levels.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Highlights -->
+                    <div class="feature-highlight">
+                        <h4 style="color: #374151; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                            <span>🌟</span> Key Features
+                        </h4>
+                        <div class="help-grid" style="margin-bottom: 0;">
+                            <div style="padding: 12px;">
+                                <strong>Real-time Analytics</strong>
+                                <p style="margin: 8px 0 0 0; color: #6b7280;">Monitor your inventory metrics with live updates on stock levels and values.</p>
+                            </div>
+                            <div style="padding: 12px;">
+                                <strong>Smart Alerts</strong>
+                                <p style="margin: 8px 0 0 0; color: #6b7280;">Automatic low stock notifications help prevent stockouts and lost sales.</p>
+                            </div>
+                            <div style="padding: 12px;">
+                                <strong>Quick Search</strong>
+                                <p style="margin: 8px 0 0 0; color: #6b7280;">Find books instantly with our powerful search functionality.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div class="faq-section">
+                        <h3 style="color: #374151; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.5rem;">❓</span>
+                            Frequently Asked Questions
+                        </h3>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>How do I update stock quantities after a sale?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                Go to "Manage Books", find the book you sold, click "Edit", and update the stock quantity. The system will automatically recalculate your total inventory value.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>What happens when a book's stock goes below 5?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                The book automatically appears in the "Low Stock Alert" section on your dashboard with a critical status indicator. This helps you reorder before running out of stock.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>Can I bulk import books from a spreadsheet?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                Currently, books must be added individually through the "Add Book" form. However, you can speed up the process by keeping consistent formatting and using copy-paste for similar information.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>How is the inventory value calculated?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                Inventory value is calculated by multiplying each book's price by its current stock quantity, then summing all books. This gives you the total retail value of your current inventory.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>What should I do if I accidentally delete a book?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                Unfortunately, deleted books cannot be recovered automatically. You'll need to re-add the book using the "Add Book" form. Always double-check before confirming deletions.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <div class="faq-question" onclick="toggleFAQ(this)">
+                                <span>Why are some recently added books not showing?</span>
+                                <span class="faq-toggle">▼</span>
+                            </div>
+                            <div class="faq-answer" style="display: none;">
+                                The "Recently Added Books" section shows the most recent additions. If you have many books, older entries may not appear. You can always find all books in the "Manage Books" section.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="contact-support">
+                        <h4>Need Additional Help?</h4>
+                        <p>Our support team is here to assist you with any questions or technical issues.</p>
+                        <a href="#" class="contact-btn" onclick="openSupportMessage(event)">
+                            <span>📞</span>
+                            Contact Support
+                        </a>
+                    </div>
+
+
+                    <!-- Support Message Pop-up -->
+                    <div id="supportMessage" class="support-message">
+                        <div class="support-message-content">
+                            <h3>Contact Support</h3>
+                            <p>
+                                For assistance, please contact our support team:<br>
+                                Email: <a href="mailto:support@pahanabookshop.com">support@pahanabookshop.com</a><br>
+                                Phone: +94 11 123 4567<br>
+                                Hours: Monday to Friday, 9 AM to 5 PM
+                            </p>                            <button onclick="closeSupportMessage()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Edit Book Modal -->
+            <div id="bookModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('bookModal')">&times;</span>
+                    <h3 id="bookModalTitle">Add Book</h3>
+                    <div class="error"></div>
+                    <form id="bookForm" method="POST">
+                        <input type="hidden" id="bookId" name="id" />
+                        <label for="bookTitle">Title</label>
+                        <input type="text" id="bookTitle" name="title" required />
+                        <label for="bookAuthor">Author</label>
+                        <input type="text" id="bookAuthor" name="author" required />
+                        <label for="bookCategory">Category</label>
+                        <input type="text" id="bookCategory" name="category" required />
+                        <label for="bookStock">Stock</label>
+                        <input type="number" id="bookStock" name="stock" min="0" required />
+                        <label for="bookPublisher">Publisher</label>
+                        <input type="text" id="bookPublisher" name="publisher" required />
+                        <label for="bookYear">Year</label>
+                        <input type="number" id="bookYear" name="year" min="1900" max="2100" required />
+                        <label for="bookPrice">Price</label>
+                        <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
+                        <label for="bookURL">Image URL</label>
+                        <input type="text" id="bookURL" name="url" required />
+                        <button type="submit">Save Book</button>
+                    </form>
+                </div>
+            </div>
 
         <form id="deleteForm" method="post" style="display:none;">
             <input type="hidden" name="action" id="deleteAction">
@@ -1007,7 +1590,15 @@
                     row.style.display = visible ? '' : 'none';
                 });
             }
-            
+
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'block';
+            }
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
             function openEditBookModal(button) {
                 const tr = button.closest('tr');
                 document.getElementById('bookModalTitle').innerText = 'Edit Book';
@@ -1032,6 +1623,24 @@
                     document.getElementById('deleteId').value = id;
                     form.submit();
                 }
+            }
+
+            function toggleFAQ(element) {
+                const faqItem = element.closest('.faq-item');
+                const answer = faqItem.querySelector('.faq-answer');
+                const toggle = faqItem.querySelector('.faq-toggle');
+
+                faqItem.classList.toggle('active');
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+            }
+
+            function openSupportMessage(event) {
+                event.preventDefault();
+                document.getElementById('supportMessage').style.display = 'flex';
+            }
+
+            function closeSupportMessage() {
+                document.getElementById('supportMessage').style.display = 'none';
             }
         </script>
     </body>
