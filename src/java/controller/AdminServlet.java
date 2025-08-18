@@ -1,5 +1,6 @@
 package controller;
 
+import Dao.BillDAO;
 import Dao.BookDAO;
 import Dao.CustomerDAO;
 import Dao.UserDAO;
@@ -43,6 +44,8 @@ public class AdminServlet extends HttpServlet {
         List<Customer> customers = CustomerDAO.getAllCustomers();
         List<User> users = UserDAO.getAllUsers();
         List<Book> books = BookDAO.getAllBooks();
+        List<BillDAO.BillData> bills = BillDAO.getAllBillsSummary(); // <-- create this method in BillDAO
+        req.setAttribute("bills", bills);
 
         req.setAttribute("customers", customers);
         req.setAttribute("users", users);
@@ -116,8 +119,8 @@ public class AdminServlet extends HttpServlet {
                     u.setPassword(password);
                     u.setRole(role);
                     u.setStatus(status.toUpperCase());
-                    
-                     try {
+
+                    try {
                         if (id.isEmpty()) {
                             u.setId(null);
                             UserDAO.insertUser(u);

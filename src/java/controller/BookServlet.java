@@ -61,7 +61,7 @@ public class BookServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("error", "Error loading book list");
-            req.getRequestDispatcher("view/error.jsp").forward(req, resp);
+//            req.getRequestDispatcher("view/error.jsp").forward(req, resp);
         }
     }
 
@@ -92,7 +92,8 @@ public class BookServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendRedirect("view/error.jsp");
+             req.setAttribute("error", "Failed to add book: " + e.getMessage());
+           // resp.sendRedirect("view/error.jsp");
         }
     }
 

@@ -11,6 +11,12 @@
     // Format date and time
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
     String formattedDate = sdf.format(data.date); // assuming data.date is a java.util.Date or java.sql.Timestamp
+    
+ // Determine the back URL based on user role
+//    String userRole = (String) session.getAttribute("userRole"); // Assuming userRole is stored in session
+//    String backUrl = userRole != null && userRole.equals("admin") ? 
+//                     request.getContextPath() + "/admin" : 
+//                     request.getContextPath() + "/cashier";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -217,6 +223,11 @@
                 <button onclick="window.print()" class="btn btn-print">🖨 Print</button>
                 <a href="<%= request.getContextPath()%>/cashier" class="btn btn-back">← Back to Cashier</a>
             </div>
+            
+<!--            <div class="footer">
+                <button onclick="window.print()" class="btn btn-print">🖨 Print</button>
+                <a href="<%= backUrl %>" class="btn btn-back">← Back to <%= userRole != null && userRole.equals("admin") ? "Admin" : "Cashier" %></a>
+            </div>-->
         </div>
     </body>
 </html>

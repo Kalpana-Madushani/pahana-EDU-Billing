@@ -1210,7 +1210,8 @@
                             <% for (Book b : recentBooks) {%>
                             <div class="recent-book-card">
                                 <div class="book-card-header">
-                                    <div class="book-icon">📘</div>
+<!--                                    <div class="book-icon">📘</div>-->
+                                    <div class="book-icon"><%= b.getImageUrl()%></div>
                                     <div class="book-info">
                                         <h4><%= b.getTitle()%></h4>
                                         <div class="book-author"><%= b.getAuthor()%></div>

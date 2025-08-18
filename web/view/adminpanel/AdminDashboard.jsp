@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="Dao.BillDAO.BillData"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Customer" %>
 <%@ page import="model.User" %>
@@ -8,6 +10,8 @@
     List<Customer> customers = (List<Customer>) request.getAttribute("customers");
     List<User> users = (List<User>) request.getAttribute("users");
     List<Book> books = (List<Book>) request.getAttribute("books");
+    List<BillData> bills = (List<BillData>) request.getAttribute("bills");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 %>
 
 <!DOCTYPE html>
@@ -31,6 +35,7 @@
                 color: #111827;
                 display: flex;
                 height: 100vh;
+                overflow: hidden;
             }
 
             /* Sidebar */
@@ -44,6 +49,16 @@
                 min-width: 250px;
                 max-width: 250px;
                 flex-shrink: 0;
+                height: 100vh; /* Full viewport height */
+                position: fixed; /* Fix sidebar */
+                top: 0;
+                left: 0;
+                overflow-y: auto;
+            }
+
+            /* Hide scrollbar for WebKit browsers (Chrome, Safari, etc.) */
+            .sidebar::-webkit-scrollbar {
+                display: none; /* Hides the scrollbar */
             }
 
 
@@ -125,11 +140,12 @@
                 flex-grow: 1;
                 background-color: #ffffff;
                 padding: 40px 50px;
-                overflow-y: auto;
+                overflow-y: auto; /* Enable scrolling for main content */
                 border-radius: 0 8px 8px 0;
                 box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+                margin-left: 250px; /* Offset to avoid overlapping fixed sidebar */
+                height: 100vh; /* Full viewport height */
             }
-
             h2.page-title {
                 font-weight: 800;
                 font-size: 2.25rem;
@@ -553,8 +569,8 @@
                 <a href="#" data-target="customersSection">👥 Customers</a>
                 <a href="#" data-target="usersSection">🧑 Users</a>
                 <a href="#" data-target="booksSection">📚 Books</a>
-<!--                <a href="#" data-target="pastBillsSection">📋 Bill History</a>
-                <a href="#" data-target="helpSection">❓ Help & Guide</a>-->
+                <a href="#" data-target="pastBillsSection">📋 Bill History</a>
+                <a href="#" data-target="helpSection">❓ Help & Guide</a>
                 <a href="login.jsp" class="logout">🔓 Logout</a>
 
                 <div class="sidebar-footer">
@@ -858,6 +874,396 @@
                 <p style="color:#6b7280; font-style: italic;">No books found.</p>
                 <% }%>
             </section>
+            
+              <!-- Past Bills Section -->
+            <section id="pastBillsSection" class="card" style="display:none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <h3>Past Bills</h3>
+                    <div style="position: relative; min-width: 400px;">
+                        <input 
+                            type="text" 
+                            id="billSearch" 
+                            placeholder="Search bill by customer name or date..." 
+                            oninput="filterBills()"
+                            style="width: 100%; padding: 12px 40px 12px 14px; border-radius: 8px; border: 1px solid #E8D5F2; font-size: 16px; transition: border-color 0.3s ease, outline 0.3s ease; outline: none;"
+                            onfocus="this.style.borderColor = '#E8D5F2';"
+                            onblur="this.style.borderColor = '#E8D5F2';"
+                            />
+                    </div>
+                </div>
+                <% if (bills != null && !bills.isEmpty()) { %>
+                <table id="billsTable">
+                    <thead>
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>Customer</th>
+                            <th>Date & Time</th>
+                            <th>Total Amount (Rs.)</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (BillData bill : bills) {%>
+                        <tr>
+                            <td><%= bill.billId%></td>
+                            <td><%= bill.customerName%></td>
+                            <td><%= sdf.format(bill.date)%></td>
+                            <td><%= String.format("%.2f", bill.total)%></td>
+                            <td>
+                                <a href="<%= request.getContextPath()%>/view/cashier/printBill.jsp?billId=<%= bill.billId%>" 
+                                   target="_blank" 
+                                   class="view-btn"
+                                   style="
+                                   display: inline-flex;
+                                   align-items: center;
+                                   gap: 6px;
+                                   padding: 8px 16px;
+                                   background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8);
+                                   color: #ffffff;
+                                   text-decoration: none;
+                                   border-radius: 8px;
+                                   font-size: 13px;
+                                   font-weight: 600;
+                                   transition: all 0.3s ease;
+                                   box-shadow: 0 2px 4px rgba(181, 149, 216, 0.3);
+                                   border: none;
+                                   cursor: pointer;
+                                   "
+                                   onmouseover="this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 4px 12px rgba(181, 149, 216, 0.4)'; this.style.background = 'linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7)';"
+                                   onmouseout="this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 2px 4px rgba(181, 149, 216, 0.3)'; this.style.background = 'linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8)';">
+                                   
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <% } %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <p style="color:#6b7280; font-style: italic;">No past bills found.</p>
+                <% }%>
+            </section>  
+
+            <!-- Help Section -->
+            <section id="helpSection" class="card" style="display:none;">
+                <h3>📖 Help & User Guide</h3>
+
+                <!-- Quick Navigation -->
+                <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #B595D8;">
+                    <h4 style="color: #1e40af; margin-top: 0; margin-bottom: 12px; font-size: 1.1rem;">Quick Navigation</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <button onclick="scrollToSection('getting-started')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">Getting Started</button>
+                        <button onclick="scrollToSection('dashboard-guide')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">Dashboard Guide</button>
+                        <button onclick="scrollToSection('user-management')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">User Management</button>
+                        <button onclick="scrollToSection('book-management')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">Book Management</button>
+                        <button onclick="scrollToSection('troubleshooting')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">Troubleshooting</button>
+                        <button onclick="scrollToSection('shortcuts')" style="background: #E8D5F2; border: none; padding: 8px 16px; border-radius: 6px; color: #374151; font-weight: 600; cursor: pointer; transition: background 0.2s;">Keyboard Shortcuts</button>
+                    </div>
+                </div>
+
+                <!-- Getting Started Section -->
+                <div id="getting-started" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        🚀 Getting Started
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <p><strong>Welcome to Pahana Bookshop Admin Panel!</strong> This guide will help you navigate and use all features effectively.</p>
+
+                        <h5 style="color: #374151; margin-top: 20px;">First Steps:</h5>
+                        <ol style="padding-left: 20px;">
+                            <li><strong>Dashboard Overview:</strong> Start with the Dashboard to get a quick overview of your bookshop's current status</li>
+                            <li><strong>Navigation:</strong> Use the sidebar menu to switch between different sections</li>
+                            <li><strong>Search & Filter:</strong> Each section has search functionality to quickly find what you're looking for</li>
+                            <li><strong>Real-time Clock:</strong> Check the current time displayed in the sidebar footer</li>
+                        </ol>
+
+                        <div style="background: #fef3c7; border-left: 4px solid #fbbf24; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+                            <strong>💡 Pro Tip:</strong> Always backup your data regularly as shown in the sidebar reminder!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Guide -->
+                <div id="dashboard-guide" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        📊 Dashboard Guide
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <p>The Dashboard provides a comprehensive overview of your bookshop's key metrics and inventory.</p>
+
+                        <h5 style="color: #374151; margin-top: 20px;">Dashboard Components:</h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 12px;">
+                            <div style="background: #f1f5f9; padding: 16px; border-radius: 6px;">
+                                <strong>📈 Summary Cards</strong>
+                                <p style="margin: 8px 0 0 0; font-size: 14px;">View total customers, users, books, and active users at a glance</p>
+                            </div>
+                            <div style="background: #f1f5f9; padding: 16px; border-radius: 6px;">
+                                <strong>📚 Book Inventory</strong>
+                                <p style="margin: 8px 0 0 0; font-size: 14px;">Horizontal scrollable gallery showing all books with stock and pricing</p>
+                            </div>
+                            <div style="background: #f1f5f9; padding: 16px; border-radius: 6px;">
+                                <strong>📊 Visual Charts</strong>
+                                <p style="margin: 8px 0 0 0; font-size: 14px;">Interactive bar chart displaying system statistics</p>
+                            </div>
+                        </div>
+
+                        <div style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+                            <strong>📌 Remember:</strong> The dashboard auto-updates when you make changes to users, books, or customers.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management Guide -->
+                <div id="user-management" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        👥 User Management Guide
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <h5 style="color: #374151; margin-top: 16px;">Managing System Users:</h5>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>➕ Adding New Users:</strong>
+                            <ol style="margin: 8px 0 0 20px;">
+                                <li>Click the "Add User" button in the Users section</li>
+                                <li>Fill in the required information: Username, Password, Role, Status</li>
+                                <li>Choose from available roles: Admin, Stock Keeper, or Cashier</li>
+                                <li>Set status as Active or Inactive</li>
+                                <li>Click "Save User" to create the account</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>✏️ Editing Users:</strong>
+                            <ul style="margin: 8px 0 0 20px;">
+                                <li>Click the "Edit" button next to any user in the table</li>
+                                <li>Modify the necessary information</li>
+                                <li>Password field will show the current password</li>
+                                <li>Save changes to update the user account</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>🔍 Searching Users:</strong>
+                            <p style="margin: 8px 0 0 0;">Use the search bar to find users by username or role. The search is real-time and case-insensitive.</p>
+                        </div>
+
+                        <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+                            <strong>⚠️ Warning:</strong> Deleting a user is permanent and cannot be undone. Make sure to backup data before deletion.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Management Guide -->
+                <div id="book-management" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        📚 Book Management Guide
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <h5 style="color: #374151; margin-top: 16px;">Managing Book Inventory:</h5>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>➕ Adding New Books:</strong>
+                            <ol style="margin: 8px 0 0 20px;">
+                                <li>Click "Add Book" button in the Books section</li>
+                                <li>Fill in all required fields:
+                                    <ul style="margin-top: 4px;">
+                                        <li>Title, Author, Category</li>
+                                        <li>Stock quantity (must be 0 or greater)</li>
+                                        <li>Publisher, Publication Year</li>
+                                        <li>Price (supports decimals like 29.99)</li>
+                                        <li>Image URL for book cover</li>
+                                    </ul>
+                                </li>
+                                <li>Click "Save Book" to add to inventory</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>📝 Book Information Guidelines:</strong>
+                            <ul style="margin: 8px 0 0 20px;">
+                                <li><strong>Stock:</strong> Enter current available quantity</li>
+                                <li><strong>Price:</strong> Use format like 25.00 or 199.50</li>
+                                <li><strong>Year:</strong> Publication year between 1900-2100</li>
+                                <li><strong>Image URL:</strong> Direct link to book cover image</li>
+                                <li><strong>Category:</strong> Use consistent naming (Fiction, Non-Fiction, etc.)</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+                            <strong>✅ Best Practice:</strong> Regularly update stock quantities and use high-quality cover images for better presentation.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Management Guide -->
+                <div id="customer-management" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        👤 Customer Management Guide
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <p>View and manage your bookshop's customer database efficiently.</p>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>🔍 Search Functionality:</strong>
+                            <ul style="margin: 8px 0 0 20px;">
+                                <li>Search by customer name or phone number</li>
+                                <li>Real-time filtering as you type</li>
+                                <li>Case-insensitive search</li>
+                            </ul>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 6px; margin: 12px 0;">
+                            <strong>👁️ Customer Information:</strong>
+                            <p style="margin: 8px 0 0 0;">View complete customer details including ID, name, phone, email, and address in an organized table format.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting Section -->
+                <div id="troubleshooting" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #dc2626; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        🔧 Troubleshooting & FAQ
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #374151;">Common Issues & Solutions:</h5>
+
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #dc2626;">❌ Problem:</strong> Cannot see newly added books/users
+                                <br>
+                                <strong style="color: #059669;">✅ Solution:</strong> Refresh the page (F5) or navigate away and back to the section
+                            </div>
+
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #dc2626;">❌ Problem:</strong> Search not working properly
+                                <br>
+                                <strong style="color: #059669;">✅ Solution:</strong> Clear the search field and try again. Ensure you're typing in the correct search box for each section.
+                            </div>
+
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #dc2626;">❌ Problem:</strong> Modal/popup windows won't close
+                                <br>
+                                <strong style="color: #059669;">✅ Solution:</strong> Click the "×" button, press Escape key, or click outside the modal window
+                            </div>
+
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #dc2626;">❌ Problem:</strong> Charts not displaying
+                                <br>
+                                <strong style="color: #059669;">✅ Solution:</strong> Ensure JavaScript is enabled in your browser and refresh the page
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="color: #374151;">Frequently Asked Questions:</h5>
+
+                            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #0369a1;">Q: How do I backup my data?</strong>
+                                <br>
+                                <span style="color: #374151;">A: Contact your system administrator for database backup procedures. Regular backups should be performed daily as reminded in the sidebar.</span>
+                            </div>
+
+                            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #0369a1;">Q: Can I undo a delete operation?</strong>
+                                <br>
+                                <span style="color: #374151;">A: No, deletions are permanent. Always confirm before deleting and ensure you have recent backups.</span>
+                            </div>
+
+                            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #0369a1;">Q: What image formats are supported for book covers?</strong>
+                                <br>
+                                <span style="color: #374151;">A: Standard web formats like JPG, PNG, and GIF are supported. Ensure the image URL is publicly accessible.</span>
+                            </div>
+
+                            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 16px; margin: 12px 0;">
+                                <strong style="color: #0369a1;">Q: How do I change user passwords?</strong>
+                                <br>
+                                <span style="color: #374151;">A: Edit the user and enter a new password in the password field. The system will update it when you save.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts -->
+                <div id="shortcuts" style="background: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="color: #1e40af; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        ⌨️ Keyboard Shortcuts
+                    </h4>
+                    <div style="color: #4b5563; line-height: 1.6;">
+                        <p>Speed up your workflow with these keyboard shortcuts:</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px;">
+                            <div style="background: #f8fafc; padding: 16px; border-radius: 6px;">
+                                <h5 style="color: #374151; margin-top: 0;">General Shortcuts:</h5>
+                                <div style="font-family: monospace; font-size: 14px;">
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">F5</kbd> - Refresh page</div>
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">Ctrl + F</kbd> - Browser search</div>
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">Escape</kbd> - Close modal</div>
+                                </div>
+                            </div>
+
+                            <div style="background: #f8fafc; padding: 16px; border-radius: 6px;">
+                                <h5 style="color: #374151; margin-top: 0;">Form Shortcuts:</h5>
+                                <div style="font-family: monospace; font-size: 14px;">
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">Tab</kbd> - Next field</div>
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">Shift + Tab</kbd> - Previous field</div>
+                                    <div style="margin: 8px 0;"><kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">Enter</kbd> - Submit form</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div style="background: #1f2937; color: #f9fafb; border-radius: 8px; padding: 24px; margin-bottom: 20px;">
+                    <h4 style="color: #60a5fa; display: flex; align-items: center; gap: 8px; margin-top: 0;">
+                        ℹ️ System Information
+                    </h4>
+                    <div style="line-height: 1.6;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                            <div>
+                                <strong>🏢 System:</strong> Pahana Bookshop Admin Panel<br>
+                                <strong>⚡ Version:</strong> 1.0.0<br>
+                                <strong>🌐 Technology:</strong> Java JSP, HTML5, CSS3, JavaScript
+                            </div>
+                            <div>
+                                <strong>📱 Responsive:</strong> Mobile & Desktop Compatible<br>
+                                <strong>🎨 UI Framework:</strong> Custom CSS with Chart.js<br>
+                                <strong>🔧 Browser Support:</strong> Chrome, Firefox, Safari, Edge
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(96, 165, 250, 0.1); border-left: 4px solid #60a5fa; padding: 12px 16px; border-radius: 4px; margin-top: 16px;">
+                            <strong>📞 Support:</strong> For technical support or system issues, contact your system administrator or IT department.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact & Support -->
+                <div style="background: linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8); color: #ffffff; border-radius: 8px; padding: 24px; text-align: center;">
+                    <h4 style="margin-top: 0; font-size: 1.3rem;">💬 Need More Help?</h4>
+                    <p style="margin: 16px 0; font-size: 1.1rem;">If you couldn't find the answer to your question in this guide:</p>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+                        <div style="background: rgba(255,255,255,0.2); padding: 16px; border-radius: 8px; min-width: 200px;">
+                            <strong>📧 Email Support</strong><br>
+                            <span style="opacity: 0.9;">admin@pahanabookshop.lk</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 16px; border-radius: 8px; min-width: 200px;">
+                            <strong>📞 Phone Support</strong><br>
+                            <span style="opacity: 0.9;">+94 11 234 5678</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 16px; border-radius: 8px; min-width: 200px;">
+                            <strong>🕒 Business Hours</strong><br>
+                            <span style="opacity: 0.9;">Mon-Fri: 8AM - 6PM</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- MODALS -->
@@ -1036,6 +1442,25 @@
                     const visible = title.includes(query) || author.includes(query) || category.includes(query) || publisher.includes(query) || year.includes(query) || price.includes(query);
                     row.style.display = visible ? '' : 'none';
                 });
+            }
+            
+            function filterBills() {
+                const query = document.getElementById('billSearch').value.trim().toLowerCase();
+                const table = document.getElementById('billsTable');
+                const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    const customerName = row.getElementsByTagName('td')[1].textContent.toLowerCase();
+                    const dateTime = row.getElementsByTagName('td')[2].textContent;
+                    const dateOnly = dateTime.split(' ')[0]; // Get only the date part (e.g., "2025-08-10")
+
+                    if (query === '' || customerName.includes(query) || dateOnly.includes(query)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
             }
 
             // Modal functions
@@ -1387,6 +1812,44 @@
         <script>
             window.addEventListener('load', () => {
                 console.log('Page loaded or reloaded. Current URL:', window.location.href);
+            });
+
+            // Smooth scroll function for help section navigation
+            function scrollToSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+
+                    // Add a subtle highlight effect
+                    section.style.boxShadow = '0 0 20px rgba(181, 149, 216, 0.3)';
+                    section.style.transform = 'scale(1.02)';
+                    section.style.transition = 'all 0.3s ease';
+
+                    // Remove the highlight after 2 seconds
+                    setTimeout(() => {
+                        section.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                        section.style.transform = 'scale(1)';
+                    }, 2000);
+                }
+            }
+
+// Add hover effects to navigation buttons
+            document.addEventListener('DOMContentLoaded', function () {
+                const navButtons = document.querySelectorAll('#helpSection button[onclick^="scrollToSection"]');
+                navButtons.forEach(button => {
+                    button.addEventListener('mouseenter', function () {
+                        this.style.background = '#B595D8';
+                        this.style.color = '#ffffff';
+                    });
+
+                    button.addEventListener('mouseleave', function () {
+                        this.style.background = '#E8D5F2';
+                        this.style.color = '#374151';
+                    });
+                });
             });
 
         </script>
