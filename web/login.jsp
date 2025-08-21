@@ -11,7 +11,7 @@
     </head>
     <body>
         <div class="login-container hide-inside-footer">
-            <h1 class="system-title">PAHANA Book Store Management System</h1>
+            <h1 class="system-title">PAHANA EDU Book Store</h1>
             <p class="login-title">Smart Billing. Better Bookshop.</p>
 
             <%
