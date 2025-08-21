@@ -252,7 +252,7 @@
                 transform: translateY(-2px);
                 box-shadow: 0 4px 12px rgba(181, 149, 216, 0.3);
             }
-            
+
             /* Error message */
             .error {
                 background-color: #fee2e2;
@@ -1073,17 +1073,18 @@
         </style>
     </head>
     <body>
+        <aside class="sidebar">
+            <h2 class="logo">🏠 PAHANA Edu</h2>
+            <nav>
+                <a href="#" class="active" data-target="dashboard">📊 Dashboard</a>
+                <a href="#" data-target="bookForm">➕ Add Book</a>
+                <a href="#" data-target="manageBooks">📘 Manage Books</a>
+                <a href="#" data-target="help">❓ Help & Guide</a>
+                <a href="login.jsp" class="logout">🔓 Logout</a>
+            </nav>
+        </aside>
 
-        <div class="sidebar">
-            <h2 class="logo">🏠 Pahana Bookshop</h2>
-            <a href="#" class="active" data-section="dashboard">📊 Dashboard</a>
-            <a href="#" data-section="bookForm">➕ Add Book</a>
-            <a href="#" data-section="manageBooks">📘 Manage Books</a>
-            <a href="#" data-section="help">❓ Help & Guide</a>
-            <a href="login.jsp" class="logout">🔓 Logout</a>
-        </div>
-
-        <div class="main">
+        <main class="main">
             <h2 class="page-title">Stock Keeper Panel</h2>
 
             <!--    Dashboard section -->
@@ -1157,7 +1158,6 @@
                                 <th>Book Details</th>
                                 <th>Current Stock</th>
                                 <th>Status</th>
-                                <th>Action Needed</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1170,9 +1170,6 @@
                                 <td><%= b.getStock()%></td>
                                 <td>
                                     <span class="stock-indicator stock-critical">🔴 Critical</span>
-                                </td>
-                                <td>
-                                    <a href="#" class="action-button">📦 Reorder Now</a>
                                 </td>
                             </tr>
                             <% } %>
@@ -1210,8 +1207,8 @@
                             <% for (Book b : recentBooks) {%>
                             <div class="recent-book-card">
                                 <div class="book-card-header">
-<!--                                    <div class="book-icon">📘</div>-->
-                                    <div class="book-icon"><%= b.getImageUrl()%></div>
+                                    <!--                                    <div class="book-icon">📘</div>-->
+                                    <img src="<%= b.getImageUrl()%>" alt="Book Cover" style="width:50px; height:70px;" />
                                     <div class="book-info">
                                         <h4><%= b.getTitle()%></h4>
                                         <div class="book-author"><%= b.getAuthor()%></div>
@@ -1238,16 +1235,15 @@
                     <% } else { %>
                     <p class="dashboard-empty">📭 No recent books found.</p>
                     <% }%>
-                    <div class="section-actions">
-                        <a href="#" class="action-button">📚 View All Books</a>
-                    </div>
                 </div>
             </section>
 
             <!--Add book section-->
-            <section id="bookForm" class="section dashboard-wrapper">
+            <section id="bookForm" class="section dashboard-wrapper" style="display:none;">
                 <h3>2. Add New Book</h3>
                 <form action="${pageContext.request.contextPath}/books" method="post">
+                    <input type="hidden" name="action" value="AddBookFromStock"/>
+                    <input type="hidden" id="userId" name="id" />
                     <label for="book_title">Book Title *</label>
                     <input type="text" name="title" placeholder="e.g., The Great Gatsby" required />
                     <label for="author">Author *</label>
@@ -1263,14 +1259,15 @@
                     <label for="price">Price *</label>
                     <input type="number" step="0.01" name="price" placeholder="e.g., 1250.00" required />
                     <label for="image">Book Cover Image *</label>
-                    <input type="text" name="imageUrl" placeholder="Image URL (optional)" />
+                    <input type="text" id="bookURL" name="bookURL" required />
 
-                    <button type="submit"><%= (editBook != null) ? "Update Book" : "Add Book"%></button>
+                    <button type="submit">Add Book</button>
                 </form>
             </section>
 
             <!--        Manage book section-->
-            <section id="manageBooks" class="section dashboard-wrapper">
+
+            <section id="manageBooks" class="section dashboard-wrapper" style="display:none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
                     <h3>3. Manage Books</h3>
                     <div style="position: relative; min-width: 400px;">
@@ -1349,7 +1346,7 @@
             </section>
 
             <!--        Help section-->
-            <section id="help" class="section dashboard-wrapper">
+            <section id="help" class="section dashboard-wrapper" style="display:none;">
                 <div class="help-container">
                     <h3>4. Help & User Guide</h3>
 
@@ -1542,122 +1539,173 @@
                     </div>
                 </div>
             </section>
+        </main>
 
-            <!-- Edit Book Modal -->
-            <div id="bookModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal('bookModal')">&times;</span>
-                    <h3 id="bookModalTitle">Add Book</h3>
-                    <div class="error"></div>
-                    <form id="bookForm" method="POST">
-                        <input type="hidden" id="bookId" name="id" />
-                        <label for="bookTitle">Title</label>
-                        <input type="text" id="bookTitle" name="title" required />
-                        <label for="bookAuthor">Author</label>
-                        <input type="text" id="bookAuthor" name="author" required />
-                        <label for="bookCategory">Category</label>
-                        <input type="text" id="bookCategory" name="category" required />
-                        <label for="bookStock">Stock</label>
-                        <input type="number" id="bookStock" name="stock" min="0" required />
-                        <label for="bookPublisher">Publisher</label>
-                        <input type="text" id="bookPublisher" name="publisher" required />
-                        <label for="bookYear">Year</label>
-                        <input type="number" id="bookYear" name="year" min="1900" max="2100" required />
-                        <label for="bookPrice">Price</label>
-                        <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
-                        <label for="bookURL">Image URL</label>
-                        <input type="text" id="bookURL" name="url" required />
-                        <button type="submit">Save Book</button>
-                    </form>
-                </div>
+        <!-- Edit Book Modal -->
+        <div id="bookModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('bookModal')">&times;</span>
+                <h3 id="bookModalTitle">Add Book</h3>
+                <div class="error"></div>
+                <form id="bookForm" action="<%=request.getContextPath()%>/books", method="POST">
+                    <input type="hidden" name="action" value="AddBookFromStock"/>
+                    <input type="hidden" id="bookId" name="id" />
+                    <label for="bookTitle">Title</label>
+                    <input type="text" id="bookTitle" name="title" required />
+                    <label for="bookAuthor">Author</label>
+                    <input type="text" id="bookAuthor" name="author" required />
+                    <label for="bookCategory">Category</label>
+                    <input type="text" id="bookCategory" name="category" required />
+                    <label for="bookStock">Stock</label>
+                    <input type="number" id="bookStock" name="stock" min="0" required />
+                    <label for="bookPublisher">Publisher</label>
+                    <input type="text" id="bookPublisher" name="publisher" required />
+                    <label for="bookYear">Year</label>
+                    <input type="number" id="bookYear" name="year" min="1900" max="2100" required />
+                    <label for="bookPrice">Price</label>
+                    <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
+                    <label for="bookURL">Image URL</label>
+                    <input type="text" id="editBookURL" name="editBookURL" required />
+                    <button type="submit">Save Book</button>
+                </form>
             </div>
+        </div>
 
-            <form id="deleteForm" method="post" style="display:none;">
-                <input type="hidden" name="action" id="deleteAction">
-                <input type="hidden" name="id" id="deleteId">
-            </form>
+        <form id="deleteForm" method="post" style="display:none;">
+            <input type="hidden" name="action" id="deleteBookAction">
+            <input type="hidden" name="id" id="deleteId">
+        </form>
 
-            <script>
-                const sidebarLinks = document.querySelectorAll('.sidebar a[data-section]');
-                const sections = document.querySelectorAll('.section');
+        <script>
+            const links = document.querySelectorAll('.sidebar nav a[data-target]');
+            const sections = document.querySelectorAll('main section');
 
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetId = link.getAttribute('data-section');
+            function showSection(targetId) {
+                let found = false;
 
-                        // Remove active class from all
-                        sidebarLinks.forEach(l => l.classList.remove('active'));
-                        sections.forEach(sec => sec.classList.remove('active'));
-
-                        // Activate current
+                // Remove active class and hide all sections
+                links.forEach(link => {
+                    if (link.getAttribute('data-target') === targetId) {
                         link.classList.add('active');
-                        document.getElementById(targetId).classList.add('active');
-                    });
+                        found = true;
+                    } else {
+                        link.classList.remove('active');
+                    }
                 });
 
-                function filterBooks() {
-                    const query = document.getElementById('bookSearch').value.toLowerCase();
-                    const rows = document.querySelectorAll('#booksTable tbody tr');
-                    rows.forEach(row => {
-                        const title = row.dataset.title || '';
-                        const author = row.dataset.author || '';
-                        const visible = title.toLowerCase().includes(query) || author.toLowerCase().includes(query);
-                        row.style.display = visible ? '' : 'none';
+                sections.forEach(section => {
+                    section.style.display = section.id === targetId ? 'block' : 'none';
+                });
+
+                // If targetId not found, fallback to first section
+                if (!found && links.length > 0) {
+                    const firstId = links[0].getAttribute('data-target');
+                    links[0].classList.add('active');
+                    sections.forEach(section => {
+                        section.style.display = section.id === firstId ? 'block' : 'none';
                     });
                 }
+            }
 
-                function openModal(modalId) {
-                    document.getElementById(modalId).style.display = 'block';
+            // Click event for sidebar links
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    showSection(targetId);
+
+                    // Update URL query parameter without reloading
+                    const url = new URL(window.location);
+                    url.searchParams.set('activeTab', targetId);
+                    window.history.pushState({}, '', url);
+                });
+            });
+
+            // Handle page load with URL query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('activeTab');
+            showSection(activeTab);
+        </script>
+
+
+
+        <script>
+
+
+            function filterBooks() {
+                const query = document.getElementById('bookSearch').value.toLowerCase();
+                const rows = document.querySelectorAll('#booksTable tbody tr');
+                rows.forEach(row => {
+                    const title = row.dataset.title || '';
+                    const author = row.dataset.author || '';
+                    const visible = title.toLowerCase().includes(query) || author.toLowerCase().includes(query);
+                    row.style.display = visible ? '' : 'none';
+                });
+            }
+
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'block';
+            }
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
+            function openEditBookModal(button) {
+                const tr = button.closest('tr');
+                openModal('bookModal');
+                document.getElementById('bookModalTitle').innerText = 'Edit Book';
+                document.getElementById('bookId').value = tr.getAttribute('data-book-id');
+                document.getElementById('bookTitle').value = tr.getAttribute('data-title');
+                document.getElementById('bookAuthor').value = tr.getAttribute('data-author');
+                document.getElementById('bookCategory').value = tr.getAttribute('data-category');
+                document.getElementById('bookStock').value = tr.getAttribute('data-stock');
+                document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
+                document.getElementById('bookYear').value = tr.getAttribute('data-year');
+                document.getElementById('bookPrice').value = tr.getAttribute('data-price');
+                document.getElementById('editBookURL').value = tr.getAttribute('data-url');
+                
+            }
+
+            // Delete confirmation
+            function confirmDelete(type, id) {
+                if (confirm('Are you sure you want to delete this ' + type + '?')) {
+                    const form = document.getElementById('deleteForm');
+                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+                    document.getElementById('deleteBookAction').value = "deleteBookAction";
+                    document.getElementById('deleteId').value = id;
+                    form.submit();
                 }
+            }
 
-                function closeModal(modalId) {
-                    document.getElementById(modalId).style.display = 'none';
-                }
+            function toggleFAQ(element) {
+                const faqItem = element.closest('.faq-item');
+                const answer = faqItem.querySelector('.faq-answer');
+                const toggle = faqItem.querySelector('.faq-toggle');
 
-                function openEditBookModal(button) {
-                    const tr = button.closest('tr');
-                    document.getElementById('bookModalTitle').innerText = 'Edit Book';
-                    document.getElementById('bookId').value = tr.getAttribute('data-book-id');
-                    document.getElementById('bookTitle').value = tr.getAttribute('data-title');
-                    document.getElementById('bookAuthor').value = tr.getAttribute('data-author');
-                    document.getElementById('bookCategory').value = tr.getAttribute('data-category');
-                    document.getElementById('bookStock').value = tr.getAttribute('data-stock');
-                    document.getElementById('bookPublisher').value = tr.getAttribute('data-publisher');
-                    document.getElementById('bookYear').value = tr.getAttribute('data-year');
-                    document.getElementById('bookPrice').value = tr.getAttribute('data-price');
-                    document.getElementById('bookURL').value = tr.getAttribute('data-url');
-                    openModal('bookModal');
-                }
+                faqItem.classList.toggle('active');
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+            }
 
-                // Delete confirmation
-                function confirmDelete(type, id) {
-                    if (confirm('Are you sure you want to delete this ' + type + '?')) {
-                        const form = document.getElementById('deleteForm');
-                        let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-                        document.getElementById('deleteAction').value = "delete" + capitalizedType;
-                        document.getElementById('deleteId').value = id;
-                        form.submit();
-                    }
-                }
+            function openSupportMessage(event) {
+                event.preventDefault();
+                document.getElementById('supportMessage').style.display = 'flex';
+            }
 
-                function toggleFAQ(element) {
-                    const faqItem = element.closest('.faq-item');
-                    const answer = faqItem.querySelector('.faq-answer');
-                    const toggle = faqItem.querySelector('.faq-toggle');
+            function closeSupportMessage() {
+                document.getElementById('supportMessage').style.display = 'none';
+            }
+        </script>
 
-                    faqItem.classList.toggle('active');
-                    answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
-                }
+        <%
+            String successMsg = (String) session.getAttribute("Success");
+            if (successMsg != null) {
+                session.removeAttribute("Success"); // clear after showing
+        %>
+        <script>
+            alert("<%= successMsg%>");
+        </script>
+        <% }%>
 
-                function openSupportMessage(event) {
-                    event.preventDefault();
-                    document.getElementById('supportMessage').style.display = 'flex';
-                }
-
-                function closeSupportMessage() {
-                    document.getElementById('supportMessage').style.display = 'none';
-                }
-            </script>
     </body>
 </html>

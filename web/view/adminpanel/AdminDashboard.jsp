@@ -427,7 +427,7 @@
                 justify-content: space-between;
             }
             .book-title {
-                font-size: 1.15rem;
+                font-size: 1rem;
                 font-weight: 600;
                 color: #1e40af;
                 margin: 0 0 6px 0;
@@ -563,7 +563,7 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
-            <h2 class="logo">🏠 Pahana Bookshop</h2>
+            <h2 class="logo">🏠 PAHANA Edu</h2>
             <nav>
                 <a href="#" class="active" data-target="dashboardSection">📊 Dashboard</a>
                 <a href="#" data-target="customersSection">👥 Customers</a>
@@ -874,8 +874,8 @@
                 <p style="color:#6b7280; font-style: italic;">No books found.</p>
                 <% }%>
             </section>
-            
-              <!-- Past Bills Section -->
+
+            <!-- Past Bills Section -->
             <section id="pastBillsSection" class="card" style="display:none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
                     <h3>Past Bills</h3>
@@ -931,7 +931,7 @@
                                    "
                                    onmouseover="this.style.transform = 'translateY(-2px)'; this.style.boxShadow = '0 4px 12px rgba(181, 149, 216, 0.4)'; this.style.background = 'linear-gradient(135deg, #D1BAE8, #B595D8, #A584C7)';"
                                    onmouseout="this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 2px 4px rgba(181, 149, 216, 0.3)'; this.style.background = 'linear-gradient(135deg, #E8D5F2, #C8A8E0, #B595D8)';">
-                                   
+
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
@@ -1326,6 +1326,7 @@
                 <h3 id="bookModalTitle">Add Book</h3>
                 <div class="error"></div>
                 <form id="bookForm" action="<%=request.getContextPath()%>/books", method="POST">
+                    <input type="hidden" name="action" value="AddBookFromAdmin"/>
                     <input type="hidden" id="bookId" name="id" />
                     <label for="bookTitle">Title</label>
                     <input type="text" id="bookTitle" name="title" required />
@@ -1342,7 +1343,7 @@
                     <label for="bookPrice">Price</label>
                     <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
                     <label for="bookURL">Image URL</label>
-                    <input type="text" id="bookURL" name="url" required />
+                    <input type="text" id="bookURL" name="bookURL" required />
                     <button type="submit">Save Book</button>
                 </form>
             </div>
@@ -1443,7 +1444,7 @@
                     row.style.display = visible ? '' : 'none';
                 });
             }
-            
+
             function filterBills() {
                 const query = document.getElementById('billSearch').value.trim().toLowerCase();
                 const table = document.getElementById('billsTable');
@@ -1655,7 +1656,7 @@
                             y: {
                                 beginAtZero: true,
                                 ticks: {
-                                    stepSize: 1,
+                                    stepSize: 10,
                                     color: '#334155',
                                     font: {
                                         family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",

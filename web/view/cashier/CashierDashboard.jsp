@@ -385,7 +385,7 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
-            <h2 class="logo">🏠 Pahana Bookshop</h2>
+            <h2 class="logo">🏠 PAHANA Edu</h2>
             <nav>
                 <a href="#" class="active" data-target="addCustomerSection">➕ Add Customer</a>
                 <a href="#" data-target="customerListSection">👥 View Customers</a>
@@ -453,10 +453,11 @@
                     </thead>
                     <tbody>
                         <% for (Customer c : customers) {%>
-                        <tr data-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : ""%>" 
-                            data-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>"
-                            data-email="<%= c.getEmail() != null ? c.getEmail().replace("\"", "&quot;") : ""%>"
-                            data-address="<%= c.getAddress() != null ? c.getAddress().replace("\"", "&quot;") : ""%>">
+                        <tr data-customer-id="<%= c.getId()%>"
+                            data-customer-name="<%= c.getName() != null ? c.getName().replace("\"", "&quot;") : ""%>" 
+                            data-customer-phone="<%= c.getPhone() != null ? c.getPhone().replace("\"", "&quot;") : ""%>"
+                            data-customer-email="<%= c.getEmail() != null ? c.getEmail().replace("\"", "&quot;") : ""%>"
+                            data-customer-address="<%= c.getAddress() != null ? c.getAddress().replace("\"", "&quot;") : ""%>">
                             <td><%= c.getId()%></td>
                             <td><%= c.getName()%></td>
                             <td><%= c.getPhone()%></td>
@@ -904,33 +905,71 @@
             </div>
         </main>
 
+        <form id="deleteForm" method="post" style="display:none;">
+            <input type="hidden" name="action" id="deleteAction">
+            <input type="hidden" name="id" id="deleteId">
+        </form>
+
         <script>
-            // Sidebar navigation toggle logic
             const links = document.querySelectorAll('.sidebar nav a[data-target]');
             const sections = document.querySelectorAll('main section');
 
+            function showSection(targetId) {
+                let found = false;
+
+                // Remove active class and hide all sections
+                links.forEach(link => {
+                    if (link.getAttribute('data-target') === targetId) {
+                        link.classList.add('active');
+                        found = true;
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+
+                sections.forEach(section => {
+                    section.style.display = section.id === targetId ? 'block' : 'none';
+                });
+
+                // If targetId not found, fallback to first section
+                if (!found && links.length > 0) {
+                    const firstId = links[0].getAttribute('data-target');
+                    links[0].classList.add('active');
+                    sections.forEach(section => {
+                        section.style.display = section.id === firstId ? 'block' : 'none';
+                    });
+                }
+            }
+
+            // Click event for sidebar links
             links.forEach(link => {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-
-                    links.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-
-                    sections.forEach(section => section.style.display = 'none');
                     const targetId = this.getAttribute('data-target');
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        targetSection.style.display = 'block';
-                    }
+                    showSection(targetId);
+
+                    // Update URL query parameter without reloading
+                    const url = new URL(window.location);
+                    url.searchParams.set('activeTab', targetId);
+                    window.history.pushState({}, '', url);
                 });
             });
+
+            // Handle page load with URL query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('activeTab');
+            showSection(activeTab);
+        </script>
+
+        <script>
 
             function filterCustomers() {
                 const query = document.getElementById('customerSearch').value.toLowerCase();
                 const rows = document.querySelectorAll('#customersTable tbody tr');
+
                 rows.forEach(row => {
-                    const name = row.dataset.name || '';
-                    const phone = row.dataset.phone || '';
+                    const name = row.dataset.customerName ? row.dataset.customerName.toLowerCase() : '';
+                    const phone = row.dataset.customerPhone ? row.dataset.customerPhone.toLowerCase() : '';
 
                     const visible = name.includes(query) || phone.includes(query);
                     row.style.display = visible ? '' : 'none';
@@ -985,61 +1024,26 @@
 
             function openEditCustomerModal(button) {
                 const tr = button.closest('tr');
+                openModal('customerModal');
+                console.log(tr.getAttribute('data-customer-id'));
                 document.getElementById('customerModalTitle').innerText = 'Edit Customer';
                 document.getElementById('customerId').value = tr.getAttribute('data-customer-id');
-                document.getElementById('customerName').value = tr.getAttribute('data-name');
-                document.getElementById('customerPhone').value = tr.getAttribute('data-phone');
-                document.getElementById('customerEmail').value = tr.getAttribute('data-email');
-                document.getElementById('customerAddress').value = tr.getAttribute('data-address');
-                openModal('customerModal');
+                document.getElementById('customerName').value = tr.getAttribute('data-customer-name');
+                document.getElementById('customerPhone').value = tr.getAttribute('data-customer-phone');
+                document.getElementById('customerEmail').value = tr.getAttribute('data-customer-email');
+                document.getElementById('customerAddress').value = tr.getAttribute('data-customer-address');
             }
 
             // Delete confirmation
             function confirmDelete(type, id) {
                 if (confirm('Are you sure you want to delete this ' + type + '?')) {
                     const form = document.getElementById('deleteForm');
-                    let capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-                    document.getElementById('deleteAction').value = "delete" + capitalizedType;
+                    document.getElementById('deleteAction').value = "deleteCustomer";
                     document.getElementById('deleteId').value = id;
                     form.submit();
                 }
             }
 
-            // Form submissions
-            document.getElementById('customerForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const errorDiv = this.querySelector('.error');
-                errorDiv.classList.remove('show');
-                const id = document.getElementById('customerId').value;
-                const name = document.getElementById('customerName').value.trim();
-                const phone = document.getElementById('customerPhone').value.trim();
-                const email = document.getElementById('customerEmail').value.trim();
-                const address = document.getElementById('customerAddress').value.trim();
-                // Basic validation
-                if (!name) {
-                    errorDiv.textContent = 'Name is required.';
-                    errorDiv.classList.add('show');
-                    return;
-                }
-
-                if (id) {
-                    // Edit existing row
-                    let row = document.querySelector(`tr[data-customer-id="${id}"]`);
-                    if (row) {
-                        row.setAttribute('data-name', name);
-                        row.setAttribute('data-phone', phone);
-                        row.setAttribute('data-email', email);
-                        row.setAttribute('data-address', address);
-                        row.cells[1].innerText = name;
-                        row.cells[2].innerText = phone;
-                        row.cells[3].innerText = email;
-                        row.cells[4].innerText = address;
-                    }
-                }
-
-                closeModal('customerModal');
-                this.reset();
-            });
             // Close modals when clicking outside
             window.addEventListener('click', function (e) {
                 if (e.target.classList.contains('modal')) {
@@ -1209,5 +1213,16 @@
             });
 
         </script>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            const error = params.get("error");
+
+            if (error) {
+                billErrorDiv.textContent = error;
+                billErrorDiv.classList.add('show');
+            }
+        </script>
+
     </body>
 </html>

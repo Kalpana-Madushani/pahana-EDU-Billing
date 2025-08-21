@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 
 @WebServlet("/books")
@@ -69,31 +70,71 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            System.out.println(req.getParameter("id"));
+            String action = req.getParameter("action");
+
             int id = !req.getParameter("id").isEmpty() ? Integer.parseInt(req.getParameter("id")) : 0;
-            String title = req.getParameter("title");
-            String author = req.getParameter("author");
-            String category = req.getParameter("category");
-            int stock = Integer.parseInt(req.getParameter("stock"));
-            String publisher = req.getParameter("publisher");
-            int year = Integer.parseInt(req.getParameter("year"));
-            double price = Double.parseDouble(req.getParameter("price"));
-            String imageUrl = req.getParameter("imageUrl");
 
-            Book book = new Book(id, title, author, category, stock, publisher, year, price, imageUrl);
+            switch (action) {
+                case "deleteBookAction": {
+                    System.out.println(action);
+                    BookDAO.deleteBook(id);
+                    String ctx = req.getContextPath();
+                    resp.sendRedirect(ctx + "/books?activeTab=manageBooks");
+                    break;
+                }
+                case "AddBookFromStock": {
+                    System.out.println(req.getParameterMap().toString());
+                    String title = req.getParameter("title");
+                    String author = req.getParameter("author");
+                    String category = req.getParameter("category");
+                    int stock = Integer.parseInt(req.getParameter("stock"));
+                    String publisher = req.getParameter("publisher");
+                    int year = Integer.parseInt(req.getParameter("year"));
+                    double price = Double.parseDouble(req.getParameter("price"));
+                    String imageUrl = req.getParameter(id > 0 ? "editBookURL" : "bookURL");
+//                    Enumeration<String> parameterNames = req.getParameterNames();
+//
+//                    while (parameterNames.hasMoreElements()) {
+//                        System.out.println(parameterNames.nextElement());
+//                    }
+                    Book book = new Book(id, title, author, category, stock, publisher, year, price, imageUrl);
+                    if (id > 0) {
+                        BookDAO.updateBook(book);
+                    } else {
+                        BookDAO.insertBook(book);
+                    }
 
-            if (id > 0) {
-                BookDAO.updateBook(book);
-            } else {
-                BookDAO.insertBook(book);
+                    resp.sendRedirect(req.getContextPath() + "/books?activeTab=manageBooks");
+                    break;
+                }
+
+                case "AddBookFromAdmin": {
+                    String title = req.getParameter("title");
+                    String author = req.getParameter("author");
+                    String category = req.getParameter("category");
+                    int stock = Integer.parseInt(req.getParameter("stock"));
+                    String publisher = req.getParameter("publisher");
+                    int year = Integer.parseInt(req.getParameter("year"));
+                    double price = Double.parseDouble(req.getParameter("price"));
+                    String imageUrl = req.getParameter("bookURL");
+
+                    Book book = new Book(id, title, author, category, stock, publisher, year, price, imageUrl);
+                    if (id > 0) {
+                        BookDAO.updateBook(book);
+                    } else {
+                        BookDAO.insertBook(book);
+                    }
+                    resp.sendRedirect(req.getContextPath() + "/admin?activeTab=booksSection");
+                    break;
+                }
+                default:
+                    doGet(req, resp);
             }
-
-           resp.sendRedirect(req.getContextPath() + "/admin?activeTab=booksSection");
 
         } catch (Exception e) {
             e.printStackTrace();
-             req.setAttribute("error", "Failed to add book: " + e.getMessage());
-           // resp.sendRedirect("view/error.jsp");
+            req.setAttribute("error", "Failed to add book: " + e.getMessage());
+            // resp.sendRedirect("view/error.jsp");
         }
     }
 

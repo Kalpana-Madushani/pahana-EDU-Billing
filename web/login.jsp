@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PAHANA Book Shop - Loginqsq</title>
+        <title>PAHANA Book Shop - Login</title>
         <link rel="icon" href="https://img.icons8.com/color/48/000000/login-rounded.png" type="image/png">
         <link rel="stylesheet" type="text/css" href="css/login-styles.css">
         <link rel="stylesheet" type="text/css" href="css/footer-styles.css">
@@ -39,7 +39,6 @@
                 </div>
 
                 <div class="button-group">
-                    <!--                <a href="register.jsp" class="btn btn-secondary">Register</a>-->
                     <input type="submit" value="Login" class="btn btn-primary">
                 </div>
             </form>
