@@ -1314,7 +1314,7 @@
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
-                    <button type="submit">Save User</button>
+                    <button type="submit" onclick="successFullyAdded('user')">Save User</button>
                 </form>
             </div>
         </div>
@@ -1344,7 +1344,7 @@
                     <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
                     <label for="bookURL">Image URL</label>
                     <input type="text" id="bookURL" name="bookURL" required />
-                    <button type="submit">Save Book</button>
+                    <button type="submit" onclick="successFullyAdded('book')">Save Book</button>
                 </form>
             </div>
         </div>
@@ -1535,6 +1535,11 @@
                     document.getElementById('deleteId').value = id;
                     form.submit();
                 }
+            }
+            
+            // Added Successfully
+            function successFullyAdded(type) {
+                alert('Successfully added ' + type + '.');
             }
 
             // Form submissions

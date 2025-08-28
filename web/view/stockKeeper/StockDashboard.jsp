@@ -1261,7 +1261,7 @@
                     <label for="image">Book Cover Image *</label>
                     <input type="text" id="bookURL" name="bookURL" required />
 
-                    <button type="submit">Add Book</button>
+                    <button type="submit" onclick="successFullyAdded('book', event)">Add Book</button>
                 </form>
             </section>
 
@@ -1664,7 +1664,7 @@
                 document.getElementById('bookYear').value = tr.getAttribute('data-year');
                 document.getElementById('bookPrice').value = tr.getAttribute('data-price');
                 document.getElementById('editBookURL').value = tr.getAttribute('data-url');
-                
+
             }
 
             // Delete confirmation
@@ -1675,6 +1675,34 @@
                     document.getElementById('deleteBookAction').value = "deleteBookAction";
                     document.getElementById('deleteId').value = id;
                     form.submit();
+                }
+            }
+
+            // Added Successfully
+//            function successFullyAdded(type) {
+//                alert('Successfully added ' + type + '.');
+//            }
+
+// Add this script within the existing <script> tag or in a new one
+            function successFullyAdded(type, event) {
+                event.preventDefault(); // Prevent default form submission
+                const form = document.querySelector('#bookForm form'); // Select the add book form
+                const inputs = form.querySelectorAll('input[required]');
+                let allFilled = true;
+
+                // Check if all required fields are filled
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+
+                // If all fields are filled, show alert and submit the form
+                if (allFilled) {
+                    alert('Successfully added ' + type + '.');
+                    form.submit(); // Programmatically submit the form
+                } else {
+                    alert('Please fill in all required fields.');
                 }
             }
 
@@ -1701,7 +1729,7 @@
             String successMsg = (String) session.getAttribute("Success");
             if (successMsg != null) {
                 session.removeAttribute("Success"); // clear after showing
-        %>
+%>
         <script>
             alert("<%= successMsg%>");
         </script>

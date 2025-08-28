@@ -179,10 +179,18 @@ public class AdminServlet extends HttpServlet {
                 case "deleteBook": {
                     int id = Integer.parseInt(req.getParameter("id"));
                     BookDAO.deleteBook(id);
-                    redirectMsg = "Book deleted";
-                    break;
+                    resp.sendRedirect(req.getContextPath()
+                            + "/admin?activeTab=booksSection&msg="
+                            + URLEncoder.encode("Book deleted", "UTF-8"));
+                    return;
                 }
 
+//                case "deleteBook": {
+//                    int id = Integer.parseInt(req.getParameter("id"));
+//                    BookDAO.deleteBook(id);
+//                    redirectMsg = "Book deleted";
+//                    break;
+//                }
                 default:
                     redirectMsg = "Unknown action";
                     break;

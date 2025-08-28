@@ -418,7 +418,7 @@
                     <label for="address">Address</label>
                     <input id="address" name="address" type="text" placeholder="Customer Address" />
 
-                    <button type="submit">Save Customer</button>
+                    <button type="submit" onclick="successFullyAdded('customer', event)">Save Customer</button>
                 </form>
             </section>
 
@@ -1041,6 +1041,33 @@
                     document.getElementById('deleteAction').value = "deleteCustomer";
                     document.getElementById('deleteId').value = id;
                     form.submit();
+                }
+            }
+
+            // Added Successfully
+//            function successFullyAdded(type) {
+//                alert('Successfully added ' + type + '.');
+//            }
+
+            function successFullyAdded(type, event) {
+                event.preventDefault(); // Prevent default form submission
+                const form = document.querySelector('#addCustomerSection form'); // Select the add book form
+                const inputs = form.querySelectorAll('input[required]');
+                let allFilled = true;
+
+                // Check if all required fields are filled
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+
+                // If all fields are filled, show alert and submit the form
+                if (allFilled) {
+                    alert('Successfully added ' + type + '.');
+                    form.submit(); // Programmatically submit the form
+                } else {
+                    alert('Please fill in all required fields.');
                 }
             }
 
