@@ -977,11 +977,20 @@
             }
 
             function filterBooks() {
-                const query = document.getElementById('bookSearch').value.toLowerCase();
-                const rows = document.querySelectorAll('#booksTable tbody tr');
-                rows.forEach(row => {
-                    const title = row.dataset.title || '';
+                const query = document.getElementById('bookSearch').value.trim().toLowerCase();
+                const table = document.getElementById('booksTable');
+                const rows = table.querySelectorAll('tbody tr');
 
+                if (!rows.length) {
+                    console.warn('No book rows found in #booksTable tbody');
+                    return;
+                }
+
+                rows.forEach(row => {
+                    const title = (row.dataset.title || '').toLowerCase();
+                    if (!title) {
+                        console.warn('Empty or missing data-title for row:', row);
+                    }
                     const visible = title.includes(query);
                     row.style.display = visible ? '' : 'none';
                 });
@@ -1043,11 +1052,6 @@
                     form.submit();
                 }
             }
-
-            // Added Successfully
-//            function successFullyAdded(type) {
-//                alert('Successfully added ' + type + '.');
-//            }
 
             function successFullyAdded(type, event) {
                 event.preventDefault(); // Prevent default form submission

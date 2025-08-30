@@ -1266,7 +1266,6 @@
             </section>
 
             <!--        Manage book section-->
-
             <section id="manageBooks" class="section dashboard-wrapper" style="display:none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
                     <h3>3. Manage Books</h3>
@@ -1679,11 +1678,6 @@
             }
 
             // Added Successfully
-//            function successFullyAdded(type) {
-//                alert('Successfully added ' + type + '.');
-//            }
-
-// Add this script within the existing <script> tag or in a new one
             function successFullyAdded(type, event) {
                 event.preventDefault(); // Prevent default form submission
                 const form = document.querySelector('#bookForm form'); // Select the add book form
@@ -1729,7 +1723,7 @@
             String successMsg = (String) session.getAttribute("Success");
             if (successMsg != null) {
                 session.removeAttribute("Success"); // clear after showing
-%>
+        %>
         <script>
             alert("<%= successMsg%>");
         </script>

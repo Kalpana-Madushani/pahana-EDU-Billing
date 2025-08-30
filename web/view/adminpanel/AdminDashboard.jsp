@@ -759,7 +759,7 @@
                     <tbody>
                         <% for (User u : users) {%>
                         <tr data-user-id="<%= u.getId()%>"
-                            data-username="<%= u.getUsername()%>"
+                            data-username="<%= u.getUsername() != null ? u.getUsername().replace("\"", "&quot;") : ""%>"
                             data-role="<%= u.getRole()%>"
                             data-status="<%= u.getStatus()%>">
                             <td><%= u.getId()%></td>
@@ -1314,7 +1314,7 @@
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                     </select>
-                    <button type="submit" onclick="successFullyAdded('user')">Save User</button>
+                    <button type="submit">Save User</button>
                 </form>
             </div>
         </div>
@@ -1344,7 +1344,7 @@
                     <input type="number" id="bookPrice" name="price" min="0" step="0.01" required />
                     <label for="bookURL">Image URL</label>
                     <input type="text" id="bookURL" name="bookURL" required />
-                    <button type="submit" onclick="successFullyAdded('book')">Save Book</button>
+                    <button type="submit">Save Book</button>
                 </form>
             </div>
         </div>
@@ -1420,24 +1420,35 @@
             }
 
             function filterUsers() {
-                const query = document.getElementById('userSearch').value.toLowerCase();
-                const rows = document.querySelectorAll('#usersTable tbody tr');
+                const query = document.getElementById('userSearch').value.trim().toLowerCase();
+                const table = document.getElementById('usersTable');
+                const rows = table.querySelectorAll('tbody tr');
+
+                if (!rows.length) {
+                    console.warn('No user rows found in #usersTable tbody');
+                    return;
+                }
+
                 rows.forEach(row => {
-                    const username = row.dataset.username || '';
+                    const username = (row.dataset.username || '').toLowerCase();
                     const role = row.dataset.role || '';
+                    if (!username) {
+                        console.warn('Empty or missing data-username for row:', row);
+                    }
                     const visible = username.includes(query) || role.includes(query);
                     row.style.display = visible ? '' : 'none';
                 });
             }
 
             function filterBooks() {
-                const query = document.getElementById('bookSearch').value.toLowerCase();
-                const rows = document.querySelectorAll('#booksTable tbody tr');
+                const query = document.getElementById('bookSearch').value.trim().toLowerCase();
+                 const table = document.getElementById('booksTable');
+                const rows = table.querySelectorAll('tbody tr');
                 rows.forEach(row => {
-                    const title = row.dataset.title || '';
-                    const author = row.dataset.author || '';
-                    const category = row.dataset.category || '';
-                    const publisher = row.dataset.publisher || '';
+                    const title = (row.dataset.title || '').toLowerCase();
+                    const author = (row.dataset.author || '').toLowerCase();
+                    const category = (row.dataset.category || '').toLowerCase();
+                    const publisher = (row.dataset.publisher || '').toLowerCase();
                     const year = row.dataset.year || '';
                     const price = row.dataset.price || '';
                     const visible = title.includes(query) || author.includes(query) || category.includes(query) || publisher.includes(query) || year.includes(query) || price.includes(query);
@@ -1536,11 +1547,6 @@
                     form.submit();
                 }
             }
-            
-            // Added Successfully
-            function successFullyAdded(type) {
-                alert('Successfully added ' + type + '.');
-            }
 
             // Form submissions
             document.getElementById('customerForm').addEventListener('submit', function (e) {
@@ -1623,7 +1629,7 @@
                     customers: <%= customers != null ? customers.size() : 0%>,
                     users: <%= users != null ? users.size() : 0%>,
                     books: <%= books != null ? books.size() : 0%>,
-                    activeUsers: <%= users != null ? users.stream().filter(u -> "active".equals(u.getStatus())).count() : 0%>
+                    activeUsers: <%= users != null ? users.stream().filter(u -> "ACTIVE".equalsIgnoreCase(u.getStatus())).count() : 0%>
                 };
                 const ctx = document.getElementById('barChart').getContext('2d');
                 new Chart(ctx, {

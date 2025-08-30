@@ -14,14 +14,16 @@ public class logServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        handleLogin(request, response);
 
-        String action = request.getParameter("action"); // login or register
-
-        if ("register".equalsIgnoreCase(action)) {
-            handleRegistration(request, response);
-        } else {
-            handleLogin(request, response);
-        }
+//        String action = request.getParameter("action"); // login or register
+//
+//        if ("register".equalsIgnoreCase(action)) {
+//            handleRegistration(request, response);
+//        } else {
+//            handleLogin(request, response);
+//        }
     }
 
     private void handleLogin(HttpServletRequest request, HttpServletResponse response)
@@ -69,53 +71,48 @@ public class logServlet extends HttpServlet {
         }
     }
     
-    private void handleRegistration(HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
-    String confirmPassword = request.getParameter("confirmPassword");
-
-    if (!password.equals(confirmPassword)) {
-        response.sendRedirect("register.jsp?error=PasswordMismatch");
-        return;
-    }
-
-    try (Connection con = DBConnection.getInstance()) {
-        // Check if username already exists
-        String checkSql = "SELECT id FROM users WHERE username = ?";
-        PreparedStatement checkStmt = con.prepareStatement(checkSql);
-        checkStmt.setString(1, username);
-        ResultSet rs = checkStmt.executeQuery();
-
-        if (rs.next()) {
-            response.sendRedirect("register.jsp?error=UserExists");
-            return;
-        }
-
-        // Insert user without specifying id (let AUTO_INCREMENT handle it)
-        String sql = "INSERT INTO users (username, password, role, status, created_date) VALUES (?, ?, ?, ?, NOW())";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, username);
-        ps.setString(2, password);  // TODO: hash the password
-        ps.setString(3, "admin");
-        ps.setString(4, "ACTIVE");
-
-        int result = ps.executeUpdate();
-
-        if (result > 0) {
-            response.sendRedirect("login.jsp?message=RegisteredSuccessfully");
-        } else {
-            response.sendRedirect("register.jsp?error=InsertFailed");
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        response.sendRedirect("register.jsp?error=ServerError");
-    }
-}
-
-
-    
-
-
+//    private void handleRegistration(HttpServletRequest request, HttpServletResponse response)
+//    throws IOException {
+//    String username = request.getParameter("username");
+//    String password = request.getParameter("password");
+//    String confirmPassword = request.getParameter("confirmPassword");
+//
+//    if (!password.equals(confirmPassword)) {
+//        response.sendRedirect("register.jsp?error=PasswordMismatch");
+//        return;
+//    }
+//
+//    try (Connection con = DBConnection.getInstance()) {
+//        // Check if username already exists
+//        String checkSql = "SELECT id FROM users WHERE username = ?";
+//        PreparedStatement checkStmt = con.prepareStatement(checkSql);
+//        checkStmt.setString(1, username);
+//        ResultSet rs = checkStmt.executeQuery();
+//
+//        if (rs.next()) {
+//            response.sendRedirect("register.jsp?error=UserExists");
+//            return;
+//        }
+//
+//        // Insert user without specifying id (let AUTO_INCREMENT handle it)
+//        String sql = "INSERT INTO users (username, password, role, status, created_date) VALUES (?, ?, ?, ?, NOW())";
+//        PreparedStatement ps = con.prepareStatement(sql);
+//        ps.setString(1, username);
+//        ps.setString(2, password);  // TODO: hash the password
+//        ps.setString(3, "admin");
+//        ps.setString(4, "ACTIVE");
+//
+//        int result = ps.executeUpdate();
+//
+//        if (result > 0) {
+//            response.sendRedirect("login.jsp?message=RegisteredSuccessfully");
+//        } else {
+//            response.sendRedirect("register.jsp?error=InsertFailed");
+//        }
+//
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//        response.sendRedirect("register.jsp?error=ServerError");
+//    }
+//}
 }
